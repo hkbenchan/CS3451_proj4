@@ -25,6 +25,7 @@ class generator {
   
   generator setCenter(pt C) {
      this.center.set(C);
+     active_p = 0;
      return this;
   }
   
@@ -56,6 +57,12 @@ class generator {
     popMatrix();
     return this;
     
+  }
+  
+  generator dragCenter(vec V) {
+    this.center.set(P(this.center, V));
+    active_p = 0;
+    return this; 
   }
   
   generator gTexture() {
