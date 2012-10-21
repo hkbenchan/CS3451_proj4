@@ -94,13 +94,14 @@ void draw() {
   
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
     if(pressed) {
-     if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i')) {
+     if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i'||key=='n')) {
        fill(white,0); noStroke(); if(showControl) C0.showSamples(20);
        C0.pick(Pick());
         println(Pick().x+" "+Pick().y+" "+Pick().z);
        if(key=='c') {  C0.delete(); drawMainCurve();} //delete selected pt
        if(key=='a') { C0.append(Pick()); drawMainCurve();}// C0.append(Pick());} //append pt at the end
        if(key=='i') { C0.insert(); drawMainCurve();} // insert control pt
+       if(key=='n') { G.setCenter(Pick());} // insert control pt
       
        }
      }
@@ -150,6 +151,12 @@ void draw() {
   if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
   
  
+    // generator animate
+  emit_timer = 1.0/G.emit_rate;
+  G.displayGP();
+  t+=STANDARD_TIMER; f+=STANDARD_TIMER; G.updateParticles(STANDARD_TIMER);
+  if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
+  
   
    
   // -------------------------------------------------------- Disable z-buffer to display occluded silhouettes and other things ---------------------------------- 
@@ -165,11 +172,7 @@ void draw() {
    if(snapping) snapPicture(); // does not work for a large screen
     pressed=false;
     
-  // generator animate
-  emit_timer = 1.0/G.emit_rate;
-  G.displayGP();
-  t+=STANDARD_TIMER; f+=STANDARD_TIMER; G.updateParticles(STANDARD_TIMER);
-  if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
+
   
  } // end draw
  
@@ -213,14 +216,14 @@ void keyPressed() {
   if(key=='d') {} 
   if(key=='e') {}
   if(key=='f') {filterFrenetNormal=!filterFrenetNormal; if(filterFrenetNormal) println("Filtering"); else println("not filtering");}
-  if(key=='g') {} // change global twist w (mouseDrag)
+ // if(key=='g') {} // change global twist w (mouseDrag)
   if(key=='h') {} // hide picked vertex (mousePressed)
   if(key=='i') {}
   if(key=='j') {}
   if(key=='k') {}
   if(key=='l') {}
   if(key=='m') {showMesh=!showMesh;}
-  if(key=='n') {showNMBE=!showNMBE;}
+ // if(key=='n') {showNMBE=!showNMBE;}
   if(key=='o') {}
   if(key=='p') {}
   if(key=='q') {}
