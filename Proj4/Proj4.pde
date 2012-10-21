@@ -94,14 +94,14 @@ void draw() {
   
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
     if(pressed) {
-     if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i'||key=='n')) {
+     if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i')) {
        fill(white,0); noStroke(); if(showControl) C0.showSamples(20);
        C0.pick(Pick());
         println(Pick().x+" "+Pick().y+" "+Pick().z);
        if(key=='c') {  C0.delete(); drawMainCurve();} //delete selected pt
        if(key=='a') { C0.append(Pick()); drawMainCurve();}// C0.append(Pick());} //append pt at the end
        if(key=='i') { C0.insert(); drawMainCurve();} // insert control pt
-       if(key=='n') { G.setCenter(Pick());} // insert control pt
+      
       
        }
      }
@@ -189,10 +189,12 @@ void mouseDragged() {
   if(keyPressed&&key=='x') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );drawMainCurve(); } // move selected vertex of curve C in screen plane
   if(keyPressed&&key=='b') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); drawMainCurve();} // move selected vertex of curve C in screen plane
   if(keyPressed&&key=='v') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); drawMainCurve();} // move selected vertex of curve Cb in XZ
-  if(keyPressed&&key=='x') {M.add(float(mouseX-pmouseX),I).add(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
-  if(keyPressed&&key=='z') {M.add(float(mouseX-pmouseX),I).add(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane
-  if(keyPressed&&key=='X') {M.addROI(float(mouseX-pmouseX),I).addROI(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
-  if(keyPressed&&key=='Z') {M.addROI(float(mouseX-pmouseX),I).addROI(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane 
+ // if(keyPressed&&key=='x') {M.add(float(mouseX-pmouseX),I).add(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
+//  if(keyPressed&&key=='z') {M.add(float(mouseX-pmouseX),I).add(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane
+//  if(keyPressed&&key=='X') {M.addROI(float(mouseX-pmouseX),I).addROI(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
+//  if(keyPressed&&key=='Z') {M.addROI(float(mouseX-pmouseX),I).addROI(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane 
+    if(keyPressed&&key=='m') {G.dragCenter( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  } // move Generator in screen plane
+    if(keyPressed&&key=='n') {G.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move Generator  in screen plane 
   
   // geneator related
   if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX));} // adjust generator size
@@ -222,7 +224,7 @@ void keyPressed() {
   if(key=='j') {}
   if(key=='k') {}
   if(key=='l') {}
-  if(key=='m') {showMesh=!showMesh;}
+ // if(key=='m') {showMesh=!showMesh;}
  // if(key=='n') {showNMBE=!showNMBE;}
   if(key=='o') {}
   if(key=='p') {}
