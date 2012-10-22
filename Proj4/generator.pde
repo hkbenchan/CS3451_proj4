@@ -18,7 +18,7 @@ class generator {
     float temp_r = this.radius + p[active_p].radius;
     float random_x  = temp_r*cos(alpha_a)*cos(beta_a), random_y = temp_r*sin(alpha_a), random_z = temp_r*cos(alpha_a)*sin(beta_a);
     float magnitude = random(1,4*temp_r)/temp_r;
-    p[active_p].setPosition(random_x,random_y,random_z).setVelocity(magnitude*random_x,magnitude*random_y,magnitude*random_z);
+    p[active_p].setPosition(this.center.x + random_x,this.center.y + random_y,this.center.z + random_z).setVelocity(magnitude*random_x,magnitude*random_y,magnitude*random_z);
     active_p++;
     return this;
   }
@@ -55,8 +55,8 @@ class generator {
     translate(this.center.x,this.center.y,this.center.z);
     sphereDetail(50);
     sphere(this.radius);
-    for (int i=0; i<active_p; i++) { p[i].display(); }
     popMatrix();
+    for (int i=0; i<active_p; i++) { p[i].display(); }
     return this;
     
   }
@@ -75,7 +75,7 @@ class generator {
   generator updateParticles(float t) {
     updateVelocity();
     for (int i=0; i<active_p; i++) {
-      p[i].updateRelPos(t);
+      p[i].updatePos(t);
     } 
     return this;
   }
