@@ -95,8 +95,11 @@ class generator {
             newVel=V(mainC.P[closestPos-1],mainC.P[closestPos+1]);
           
         }
-        newVel=U(newVel);
-        newVel=V((1+distanceParticileClosestC),newVel);
+    //    newVel=U(newVel);
+        float decayRatio=sq(cos(distanceParticileClosestC*PI/1000));//cosine square decay function,  decay according to distance from 0 to 10
+        if (i==1 ||i==2)
+           println(i+"  "+decayRatio);
+        newVel=V(decayRatio,newVel);
         p[i].setVelocity(newVel.x,newVel.y,newVel.z);
     } 
     return this;
