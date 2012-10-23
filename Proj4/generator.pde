@@ -17,8 +17,8 @@ class generator {
     float alpha_a = random(0, 2*PI), beta_a = random(0, 2*PI);
     float temp_r = this.radius + p[active_p].radius;
     float random_x  = temp_r*cos(alpha_a)*cos(beta_a), random_y = temp_r*sin(alpha_a), random_z = temp_r*cos(alpha_a)*sin(beta_a);
-    float magnitude = random(1,4*temp_r)/temp_r;
-    p[active_p].setPosition(this.center.x + random_x,this.center.y + random_y,this.center.z + random_z).setVelocity(magnitude*random_x,magnitude*random_y,magnitude*random_z);
+    //float magnitude = random(1,4*temp_r)/temp_r;
+    p[active_p].setPosition(this.center.x + random_x,this.center.y + random_y,this.center.z + random_z).setVelocity(0,0,0);
     active_p++;
     return this;
   }
@@ -85,7 +85,19 @@ class generator {
         int closestPos=findClosestPtC(P(p[i].x,p[i].y,p[i].z));
         stroke(black);
         show(P(p[i].x,p[i].y,p[i].z),mainC.P[closestPos]);
-     
+        vec newVel;
+        float distanceParticileClosestC=d(P(p[i].x,p[i].y,p[i].z), mainC.P[closestPos]);
+        if(closestPos==0){
+           newVel=V(mainC.P[closestPos],mainC.P[closestPos+1]);
+           //p[i].setVelocity(V(mainC.P[closestPos],mainC.P[closestPos+1]));
+        }else{
+          // p[i].setVelocity(V(mainC.P[closestPos-1],mainC.P[closestPos+1]));
+            newVel=V(mainC.P[closestPos-1],mainC.P[closestPos+1]);
+          
+        }
+        newVel=U(newVel);
+        newVel=V((1+distanceParticileClosestC),newVel);
+        p[i].setVelocity(newVel.x,newVel.y,newVel.z);
     } 
     return this;
   }
