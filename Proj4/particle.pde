@@ -15,7 +15,9 @@ class particle {
   particle updateRelPos(float t) { x += velocity.x*t; y += velocity.y*t; z += velocity.z*t; return this; }
   
   particle display() {
+    
     noStroke();
+    fill(green);
     pushMatrix();
     translate(x, y, z);
     sphereDetail(50);

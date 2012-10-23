@@ -36,7 +36,7 @@ pt Q=P(0,0,0); vec I=V(1,0,0); vec J=V(0,1,0); vec K=V(0,0,1); // picked surface
 void initView() {Q=P(0,0,0); I=V(1,0,0); J=V(0,1,0); K=V(0,0,1); F = P(0,0,0); E = P(0,0,1000); U=V(0,1,0); } // declares the local frames
 
 // ******************************** MESHES ***********************************************
-Mesh M=new Mesh(); // meshes for models M0 and M1
+//Mesh M=new Mesh(); // meshes for models M0 and M1
 
 float volume1=0, volume0=0;
 float sampleDistance=1;
@@ -58,8 +58,8 @@ void setup() {
   initView(); // declares the local frames for 3D GUI
 
   // ***************** Load meshes
-  M.declareVectors().loadMeshVTS("data/horse.vts");
-  M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
+//  M.declareVectors().loadMeshVTS("data/horse.vts");
+//  M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
   // ***************** Load Curve
   C.loadPts();
    C0.empty().append(C.Pof(0)).append(C.Pof(1)).append(C.Pof(2)).append(C.Pof(3)).append(C.Pof(4));
@@ -94,13 +94,14 @@ void draw() {
   
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
     if(pressed) {
-     if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i')) {
+     if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i'||key==',')) {
        fill(white,0); noStroke(); if(showControl) C0.showSamples(20);
        C0.pick(Pick());
         println(Pick().x+" "+Pick().y+" "+Pick().z);
-       if(key=='c') {  C0.delete(); drawMainCurve();} //delete selected pt
+       if(key=='c') { C0.delete(); drawMainCurve();} //delete selected pt
        if(key=='a') { C0.append(Pick()); drawMainCurve();}// C0.append(Pick());} //append pt at the end
        if(key=='i') { C0.insert(); drawMainCurve();} // insert control pt
+       if(key==',') { G.setCenter(Pick());} // insert control pt
       
       
        }
@@ -123,24 +124,24 @@ void draw() {
    if(showTube) mainC.showTube(10,4,10,orange); 
    
    // -------------------------------------------------------- create and move mesh ----------------------------------   
-   pt Q0=C.Pof(10); //fill(white); show(Q0,4);
-   M.moveTo(Q0);
+ //  pt Q0=C.Pof(10); //fill(white); show(Q0,4);
+  // M.moveTo(Q0);
   
      // -------------------------------------------------------- show mesh ----------------------------------   
-   if(showMesh) { fill(yellow); if(M.showEdges) stroke(white);  else noStroke(); M.showFront();} 
+ //  if(showMesh) { fill(yellow); if(M.showEdges) stroke(white);  else noStroke(); M.showFront();} 
    
     // -------------------------- pick mesh corner ----------------------------------   
-   if(pressed) if (keyPressed&&(key=='.')) M.pickc(Pick());
+ //  if(pressed) if (keyPressed&&(key=='.')) M.pickc(Pick());
  
  
      // -------------------------------------------------------- show mesh corner ----------------------------------   
-   if(showMesh) { fill(red); noStroke(); M.showc();} 
+  // if(showMesh) { fill(red); noStroke(); M.showc();} 
  
     // -------------------------------------------------------- edit mesh  ----------------------------------   
-  if(pressed) {
-     if (keyPressed&&(key=='x'||key=='z')) M.pickc(Pick()); // sets M.sc to the closest corner in M from the pick point
-     if (keyPressed&&(key=='X'||key=='Z')) M.pickc(Pick()); // sets M.sc to the closest corner in M from the pick point
-     }
+ // if(pressed) {
+ //    if (keyPressed&&(key=='x'||key=='z')) M.pickc(Pick()); // sets M.sc to the closest corner in M from the pick point
+ //    if (keyPressed&&(key=='X'||key=='Z')) M.pickc(Pick()); // sets M.sc to the closest corner in M from the pick point
+ //    }
  
   // -------------------------------------------------------- graphic picking on surface and view control ----------------------------------   
   if (keyPressed&&key==' ') T.set(Pick()); // sets point T on the surface where the mouse points. The camera will turn toward's it when the ';' key is released
@@ -152,6 +153,7 @@ void draw() {
   
  
     // generator animate
+     
   emit_timer = 1.0/G.emit_rate;
   G.displayGP();
   t+=STANDARD_TIMER; f+=STANDARD_TIMER; G.updateParticles(STANDARD_TIMER);
@@ -162,8 +164,8 @@ void draw() {
   // -------------------------------------------------------- Disable z-buffer to display occluded silhouettes and other things ---------------------------------- 
   hint(DISABLE_DEPTH_TEST);  // show on top
   stroke(black); if(showControl) {C0.showSamples(2);}
-  if(showMesh&&showSilhouette) {stroke(dbrown); M.drawSilhouettes(); }  // display silhouettes
-  strokeWeight(2); stroke(red);if(showMesh&&showNMBE) M.showMBEs();  // manifold borders
+//  if(showMesh&&showSilhouette) {stroke(dbrown); M.drawSilhouettes(); }  // display silhouettes
+//  strokeWeight(2); stroke(red);if(showMesh&&showNMBE) M.showMBEs();  // manifold borders
   camera(); // 2D view to write help text
   writeFooterHelp();
   hint(ENABLE_DEPTH_TEST); // show silouettes
@@ -231,7 +233,7 @@ void keyPressed() {
   if(key=='q') {}
   if(key=='r') {}
   if(key=='s') {} // drag curve control point in xz (mouseDragged)
-//  if(key=='t') {showTube=!showTube;}
+  if(key=='t') {showTube=!showTube;}
   if(key=='u') {}
   if(key=='v') {} // move S2
   if(key=='w') {}
@@ -243,49 +245,49 @@ void keyPressed() {
   if(key=='B') {}
   if(key=='C') {C.loadPts();} // save curve
   if(key=='D') {} //move in depth without rotation (draw)
-  if(key=='E') {M.smoothen(); M.normals();}
+  //if(key=='E') {M.smoothen(); M.normals();}
   if(key=='F') {}
   if(key=='G') {}
   if(key=='H') {}
   if(key=='I') {}
   if(key=='J') {}
   if(key=='K') {}
-  if(key=='L') {M.loadMeshVTS().updateON().resetMarkers().computeBox(); F.set(M.Cbox); E.set(P(F,M.rbox*2,K)); for(int i=0; i<10; i++) vis[i]=true;}
+ // if(key=='L') {M.loadMeshVTS().updateON().resetMarkers().computeBox(); F.set(M.Cbox); E.set(P(F,M.rbox*2,K)); for(int i=0; i<10; i++) vis[i]=true;}
   if(key=='M') {}
-  if(key=='N') {M.next();}
+ // if(key=='N') {M.next();}
   if(key=='O') {}
   if(key=='P') {}
   if(key=='Q') {exit();}
   if(key=='R') {}
-  if(key=='S') {M.swing();}
+ // if(key=='S') {M.swing();}
   if(key=='T') {}
   if(key=='U') {}
   if(key=='V') {} 
-  if(key=='W') {M.saveMeshVTS();}
+ // if(key=='W') {M.saveMeshVTS();}
   if(key=='X') {} // drag mesh vertex in xy and neighbors (mouseDragged)
-  if(key=='Y') {M.refine(); M.makeAllVisible();}
+//  if(key=='Y') {M.refine(); M.makeAllVisible();}
   if(key=='Z') {} // drag mesh vertex in xz and neighbors (mouseDragged)
 
-  if(key=='`') {M.perturb();}
+  //if(key=='`') {M.perturb();}
   if(key=='~') {showSpine=!showSpine;}
   if(key=='!') {snapping=true;}
   if(key=='@') {}
   if(key=='#') {}
-  if(key=='$') {M.moveTo(C.Pof(10));} // ???????
+//  if(key=='$') {M.moveTo(C.Pof(10));} // ???????
   if(key=='%') {}
   if(key=='&') {}
   if(key=='*') {sampleDistance*=2;}
   if(key=='(') {}
   if(key==')') {showSilhouette=!showSilhouette;}
-  if(key=='_') {M.flatShading=!M.flatShading;}
-  if(key=='+') {M.flip();} // flip edge of M
-  if(key=='-') {M.showEdges=!M.showEdges;}
+  //if(key=='_') {M.flatShading=!M.flatShading;}
+//  if(key=='+') {M.flip();} // flip edge of M
+//  if(key=='-') {M.showEdges=!M.showEdges;}
   if(key=='=') {C.P[5].set(C.P[0]); C.P[6].set(C.P[1]); C.P[7].set(C.P[2]); C.P[8].set(C.P[3]); C.P[9].set(C.P[4]);}
   if(key=='{') {showFrenetQuads=!showFrenetQuads;}
   if(key=='}') {}
   if(key=='|') {}
-  if(key=='[') {initView(); F.set(M.Cbox); E.set(P(F,M.rbox*2,K));}
-  if(key==']') {F.set(M.Cbox);}
+//  if(key=='[') {initView(); F.set(M.Cbox); E.set(P(F,M.rbox*2,K));}
+ // if(key==']') {F.set(M.Cbox);}
   if(key==':') {translucent=!translucent;}
   if(key==';') {showControl=!showControl;}
   if(key=='<') {}

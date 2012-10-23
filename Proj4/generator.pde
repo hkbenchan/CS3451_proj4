@@ -49,6 +49,8 @@ class generator {
   generator displayGP() {
     pushMatrix();
     noStroke();
+    stroke(green);
+    fill(yellow);
     lights();
     translate(this.center.x,this.center.y,this.center.z);
     sphereDetail(50);
@@ -71,9 +73,31 @@ class generator {
   }
   
   generator updateParticles(float t) {
+    updateVelocity();
     for (int i=0; i<active_p; i++) {
       p[i].updateRelPos(t);
     } 
     return this;
   }
+ 
+  generator updateVelocity() {
+    for (int i=0; i<active_p; i++) { //for each particle do
+        int closestPos=findClosestPtC(P(p[i].x,p[i].y,p[i].z));
+        stroke(black);
+        show(P(p[i].x,p[i].y,p[i].z),mainC.P[closestPos]);
+     
+    } 
+    return this;
+  }
+  
+  int findClosestPtC(pt particle){
+     int nearestPos=0;
+     for(int i=0; i<mainC.n;i++){
+        if(d(particle, mainC.P[i])<d(particle, mainC.P[nearestPos]))
+            nearestPos=i;
+     }
+     return nearestPos;
+  }
+  
+
 }
