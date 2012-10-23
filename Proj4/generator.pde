@@ -1,6 +1,7 @@
 // class: generator
 
 class generator {
+
   pt center = new pt(0,0,0);
   float radius = 50;
   float x = width/2, y = height/2, z = 0;
@@ -104,34 +105,73 @@ class generator {
   }
  
   generator updateVelocity() {
+    println(mainC.n);
     for (int i=0; i<max_p; i++) { //for each particle do
         if (display[i]) {
-          int closestPos=findClosestPtC(P(p[i].x,p[i].y,p[i].z));
-          if (closestPos == mainC.n-1) { removeParticle(i); continue; }
+          //findClosestPtC(P(p[i].x,p[i].y,p[i].z));
+          if (p[i].closestPos == mainC.n-1) { removeParticle(i); continue; }
           stroke(black);
-          show(P(p[i].x,p[i].y,p[i].z),mainC.P[closestPos]);
+          show(P(p[i].x,p[i].y,p[i].z),mainC.P[p[i].closestPos]);
           vec newVel;
-          float distanceParticileClosestC=d(P(p[i].x,p[i].y,p[i].z), mainC.P[closestPos]);
-          if(closestPos==0){
-             newVel=V(mainC.P[closestPos],mainC.P[closestPos+1]);
+          if(d(P(p[i].x,p[i].y,p[i].z), mainC.P[p[i].closestPos+1])<d(P(p[i].x,p[i].y,p[i].z), mainC.P[p[i].closestPos]))
+          {
+             p[i].closestPos++;
+          }
+          float distanceParticileClosestC=d(P(p[i].x,p[i].y,p[i].z), mainC.P[p[i].closestPos]);
+          if(p[i].closestPos==0){
+             newVel=V(mainC.P[p[i].closestPos],mainC.P[p[i].closestPos+1]);
              //p[i].setVelocity(V(mainC.P[closestPos],mainC.P[closestPos+1]));
           }else{
             // p[i].setVelocity(V(mainC.P[closestPos-1],mainC.P[closestPos+1]));
-              newVel=V(mainC.P[closestPos-1],mainC.P[closestPos+1]);
-            
+              newVel=V(mainC.P[p[i].closestPos-1],mainC.P[p[i].closestPos+1]);    
           }
-      //    newVel=U(newVel);
-          float decayRatio=sq(cos(distanceParticileClosestC*PI/1000));//cosine square decay function,  decay according to distance from 0 to 10
+          //newVel=U(newVel);
+          float decayRatio=sq(cos(distanceParticileClosestC*PI/1000));//cosine square decay function,  decay according to distance from 0 to 1000
           if (i==0 ||i==1)
              println(i+"  "+decayRatio);
-          newVel=V(decayRatio,newVel);
-          p[i].setVelocity(newVel.x,newVel.y,newVel.z);
-        }
+          newVel=V(5*decayRatio,newVel);
+          if (addDynamic){
+                if(p[i].closestPos==0)
+                       p[i].setVelocity(newVel.x,newVel.y,newVel.z);
+                else{
+                       p[i].setVelocity((p[i].velocity.x+dynamicBlendParameter*(newVel.x-p[i].velocity.x)),(p[i].velocity.y+dynamicBlendParameter*(newVel.y-p[i].velocity.y)),(p[i].velocity.z+dynamicBlendParameter*(newVel.z-p[i].velocity.z)));
+                       
+                }
+            
+          }else{
+                    if(p[i].closestPos==0)
+                       p[i].setVelocity(newVel.x,newVel.y,newVel.z);
+                    else{
+                      // println("in here"+p[i].velocity.x+"  "+p[i].velocity.y+"  "+p[i].velocity.z);
+                      //calculate geometric mean
+                 /*     float x,y,z;
+                      if(p[i].velocity.x*newVel.x<0)
+                          x=-sqrt(-p[i].velocity.x*newVel.x);
+                      else
+                          x=sqrt(p[i].velocity.x*newVel.x);
+                      
+                      if(p[i].velocity.y*newVel.y<0)
+                          y=-sqrt(-p[i].velocity.y*newVel.y);
+                      else
+                          y=sqrt(p[i].velocity.y*newVel.y);
+                          
+                      if(p[i].velocity.z*newVel.z<0)
+                          z=-sqrt(-p[i].velocity.z*newVel.z);
+                      else
+                          z=sqrt(p[i].velocity.z*newVel.z);  */
+                      
+                      p[i].setVelocity((p[i].velocity.x+newVel.x)/2,(p[i].velocity.y+newVel.y)/2,(p[i].velocity.z+newVel.z)/2);
+                       
+                    }
+                  //  println(p[i].velocity.x+"  "+p[i].velocity.y+"  "+p[i].velocity.z);
+          }
+       }
+       
     } 
     return this;
   }
   
-  int findClosestPtC(pt particle){
+ /* int findClosestPtC(pt particle){
      int nearestPos=0;
      for(int i=0; i<mainC.n;i++){
         if(d(particle, mainC.P[i])<d(particle, mainC.P[nearestPos]))
@@ -139,6 +179,6 @@ class generator {
      }
      return nearestPos;
   }
-  
+  */
 
 }

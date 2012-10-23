@@ -11,6 +11,7 @@ GLU glu;
 
 // ****************************** GLOBAL VARIABLES FOR DISPLAY OPTIONS *********************************
 Boolean 
+  addDynamic=false,
   showMesh=false,
   translucent=false,   
   showSilhouette=false, 
@@ -27,6 +28,7 @@ Boolean
 //**************************** global variables ****************************
 float t=0, f=0, emit_timer = 0, STANDARD_TIMER = 0.01;
 generator G = new generator();
+float dynamicBlendParameter=.5;
 
 // String SCC = "-"; // info on current corner
    
@@ -78,6 +80,12 @@ void setup() {
 // ******************************************************************************************************************* DRAW      
 void draw() {  
   background(white);
+  //fill(black); 
+  if (addDynamic)
+     text("Add Dynamic: Yes ; Blend Parameter: "+dynamicBlendParameter,10,20);
+  else
+     text("Add Dynamic: No",10,20);
+  //noFill();
   // -------------------------------------------------------- Help ----------------------------------
   if(showHelpText) {
     camera(); // 2D display to show cutout
@@ -111,7 +119,7 @@ void draw() {
   // -------------------------------------------------------- create control curves  ----------------------------------   
     stroke(black); noFill(); C0.showSamples(3);
     
-    stroke(blue); mainC.drawEdges(); 
+    stroke(blue);  mainC.showSamples(1);mainC.drawEdges(); 
 
    // -------------------------------------------------------- create and show spines  ----------------------------------   
 //   S0=S0.makeFrom(C0,500).resampleDistance(sampleDistance);
@@ -157,7 +165,7 @@ void draw() {
   emit_timer = 1.0/G.emit_rate;
   G.displayGP();
   t+=STANDARD_TIMER; f+=STANDARD_TIMER; G.updateParticles(STANDARD_TIMER);
-  //if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
+  if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
   
   
    
@@ -201,6 +209,9 @@ void mouseDragged() {
   // geneator related
   if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX));} // adjust generator size
   if(keyPressed && key=='t') {G.emit_rate += int(mouseX-pmouseX)/10;}
+  
+  if(keyPressed && key=='s') {dynamicBlendParameter+=float(mouseX-pmouseX)/1000 ;if(dynamicBlendParameter>=1) dynamicBlendParameter=1; if(dynamicBlendParameter<=0) dynamicBlendParameter=0;}//ajust blend parameter
+  
 }
 
 void mouseReleased() {
@@ -214,17 +225,17 @@ void keyReleased() {
 
  
 void keyPressed() {
-  if(key=='a') {} // drag curve control point in xz (mouseDragged)
+  if(key=='f') {addDynamic=!addDynamic;} 
   if(key=='b') {}  // move S2 in XZ
   if(key=='c') {} // load curve
   if(key=='d') {} 
   if(key=='e') {}
-  if(key=='f') {filterFrenetNormal=!filterFrenetNormal; if(filterFrenetNormal) println("Filtering"); else println("not filtering");}
+ // if(key=='f') {filterFrenetNormal=!filterFrenetNormal; if(filterFrenetNormal) println("Filtering"); else println("not filtering");}
  // if(key=='g') {} // change global twist w (mouseDrag)
   if(key=='h') {} // hide picked vertex (mousePressed)
   if(key=='i') {}
   if(key=='j') {}
-  if(key=='k') {G.renderNewParticle().renderNewParticle(); G.p[0].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+10); G.p[1].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+40);}
+  if(key=='k') {G.renderNewParticle().renderNewParticle(); G.p[0].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+30); G.p[1].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+70);}
   if(key=='l') {}
  // if(key=='m') {showMesh=!showMesh;}
  // if(key=='n') {showNMBE=!showNMBE;}

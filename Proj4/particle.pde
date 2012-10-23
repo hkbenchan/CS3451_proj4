@@ -1,7 +1,7 @@
 // class: particle
 
 class particle {
-
+  int closestPos=0;
   float radius = 10; // default radius size
   float x = 0 ,y = 0 ,z = 0;  // position
   vec velocity = new vec(0,0,0);
