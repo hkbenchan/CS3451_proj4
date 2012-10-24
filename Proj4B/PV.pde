@@ -69,7 +69,12 @@ class pt { float x=0,y=0,z=0;
 // =====  point functions
 pt P() {return new pt(); };                                            // point (x,y,z)
 pt P(float x, float y, float z) {return new pt(x,y,z); };                                            // point (x,y,z)
-pt P(pt A) {return new pt(A.x,A.y,A.z); };                                                           // copy of point P
+pt P(pt A) {return new pt(A.x,A.y,A.z); };      // copy of point P
+pt advP(pt A,float s, pt B){ //advance by a distance s
+  pt temp=P(A);
+  temp.add(s,V(A,B));
+  return temp;
+}
 pt P(pt A, float s, pt B) {return new pt(A.x+s*(B.x-A.x),A.y+s*(B.y-A.y),A.z+s*(B.z-A.z)); };        // A+sAB
 pt P(pt A, pt B) {return P((A.x+B.x)/2.0,(A.y+B.y)/2.0,(A.z+B.z)/2.0); }                             // (A+B)/2
 pt P(pt A, pt B, pt C) {return new pt((A.x+B.x+C.x)/3.0,(A.y+B.y+C.y)/3.0,(A.z+B.z+C.z)/3.0); };     // (A+B+C)/3
@@ -120,7 +125,7 @@ void show(pt P, vec V) {line(P.x,P.y,P.z,P.x+V.x,P.y+V.y,P.z+V.z); };          /
 void show(pt P, float d , vec V) {line(P.x,P.y,P.z,P.x+d*V.x,P.y+d*V.y,P.z+d*V.z); }; // shows edge from P to P+dV
 void show(pt A, pt B, pt C) {beginShape(); vertex(A);vertex(B); vertex(C); endShape(CLOSE);};                      // volume of tet 
 void show(pt A, pt B, pt C, pt D) {beginShape(); vertex(A); vertex(B); vertex(C); vertex(D); endShape(CLOSE);};                      // volume of tet 
-void show(pt P, float r) {pushMatrix(); translate(P.x,P.y,P.z); sphere(r); popMatrix();}; // render sphere of radius r and center P
+void show(pt P, float r) {pushMatrix();sphereDetail(1); translate(P.x,P.y,P.z); sphere(r); popMatrix();}; // render sphere of radius r and center P
 void show(pt P, float s, vec I, vec J, vec K) {noStroke(); fill(yellow); show(P,5); stroke(red); show(P,s,I); stroke(green); show(P,s,J); stroke(blue); show(P,s,K); }; // render sphere of radius r and center P
 void show(pt P, String s) {text(s, P.x, P.y, P.z); }; // prints string s in 3D at P
 void show(pt P, String s, vec D) {text(s, P.x+D.x, P.y+D.y, P.z+D.z);  }; // prints string s in 3D at P+D
@@ -222,4 +227,16 @@ pt subdiv(pt A, pt B, pt C, pt D){ return P(H(A,B,C),H(D,C,B));}
 pt H(pt A,pt B, pt C) { return NevilCurve(A, B, C, 1.5); }
 pt NevilCurve(pt A, pt B, pt C, float s) {pt P=L(A,B,s);pt Q=L(B,C,s-1); return L(P,Q,s/2); }
 
-
+// Average two vectors //( A^ratio * B^(1-ratio) )
+vec average(vec A, vec B, float ratio) {
+  if (ratio>1 || ratio<0) { println("Cannot average two vectors with ratio smaller than zero or larger than 1."); return A; } 
+  /*vec tmp = V(0,0,0);
+  
+  float a_norm = n(A), b_norm = n(B);
+  vec A_n = U(A), B_n = U(B);
+  tmp.x = pow(A_n.x+1,ratio)*pow(B_n.x+1,1-ratio)-1;
+  tmp.y = pow(A_n.y+1,ratio)*pow(B_n.y+1,1-ratio)-1;
+  tmp.z = pow(A_n.z+1,ratio)*pow(B_n.z+1,1-ratio)-1;
+  return V(pow(a_norm,ratio)*pow(b_norm,1-ratio), tmp); */
+  return V(ratio,A,1-ratio,B);
+}

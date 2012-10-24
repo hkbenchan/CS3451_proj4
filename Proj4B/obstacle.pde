@@ -3,9 +3,9 @@
 class obstacle {
   PImage earthImage ;//= loadImage("data/world32k.jpg");
   pt center = new pt(0,0,0);
-  float radius = 50;
+  float radius = 20;
   float x = width/2, y = height/2, z = 0;
-  int sDetail = 35;
+  int sDetail = 13;
   
   // for display earth
   float rotationX = 0;
