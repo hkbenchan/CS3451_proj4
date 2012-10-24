@@ -7,7 +7,7 @@ class generator {
   float x = width/2, y = height/2, z = 0;
   int max_p = 1024;
   int active_p = 0;
-  float emit_rate = 1; // 1 particle per second
+  float emit_rate = 10; // 1 particle per second
   particle p[] = new particle[max_p];
   LinkedList queue = new LinkedList(); // for recycle particles
   boolean display[] = new boolean[max_p]; // for checking display condition
@@ -182,5 +182,29 @@ class generator {
      return nearestPos;
   }
   */
+  
+  
+  void saveInfo() {saveInfo("data/G.pts");}
+  void saveInfo(String fn) { String [] inppts = new String [2];
+    int s=0; inppts[s++]=str(1); 
+    inppts[s++]=str(center.x)+","+str(center.y)+","+str(center.z);
+    saveStrings(fn,inppts);  };
+  void loadInfo() {loadInfo("data/G.pts");}
+  void loadInfo(String fn) { String [] ss = loadStrings(fn);
+    String subpts;
+    int s=0; int comma1, comma2; int n = int(ss[s]);
+    for(int i=0; i<n; i++) { 
+      String S =  ss[++s];
+      comma1=S.indexOf(',');
+      float x=float(S.substring(0, comma1));
+      String R = S.substring(comma1+1);
+      comma2=R.indexOf(',');      
+      float y=float(R.substring(0, comma2)); 
+      float z=float(R.substring(comma2+1));
+      center= P(x,y,z);  
+      }; 
+    }
+    
+    
 
 }

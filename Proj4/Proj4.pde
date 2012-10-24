@@ -63,14 +63,15 @@ void setup() {
 //  M.declareVectors().loadMeshVTS("data/horse.vts");
 //  M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
   // ***************** Load Curve
-  C.loadPts();
-   C0.empty().append(C.Pof(0)).append(C.Pof(1)).append(C.Pof(2)).append(C.Pof(3)).append(C.Pof(4));
+  C0.loadPts();
+ //  C0.empty().append(C.Pof(0)).append(C.Pof(1)).append(C.Pof(2)).append(C.Pof(3)).append(C.Pof(4));
    drawMainCurve();
   // ***************** Set view
   
   // ***************** Generator Init
   G.init();
-  G.setCenter(P(width/2, height/2, 0));
+  G.loadInfo();
+ // G.setCenter(P(width/2, height/2, 0));
   randomSeed(10);
  
   F=P(); E=P(0,0,500);
@@ -271,7 +272,7 @@ void keyPressed() {
   if(key=='P') {}
   if(key=='Q') {exit();}
   if(key=='R') {}
- // if(key=='S') {M.swing();}
+  if(key=='S') {C0.savePts();G.saveInfo();}
   if(key=='T') {}
   if(key=='U') {}
   if(key=='V') {} 
