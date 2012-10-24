@@ -222,4 +222,16 @@ pt subdiv(pt A, pt B, pt C, pt D){ return P(H(A,B,C),H(D,C,B));}
 pt H(pt A,pt B, pt C) { return NevilCurve(A, B, C, 1.5); }
 pt NevilCurve(pt A, pt B, pt C, float s) {pt P=L(A,B,s);pt Q=L(B,C,s-1); return L(P,Q,s/2); }
 
-
+// Average two vectors //( A^ratio * B^(1-ratio) )
+vec average(vec A, vec B, float ratio) {
+  if (ratio>1 || ratio<0) { println("Cannot average two vectors with ratio smaller than zero or larger than 1."); return A; } 
+  /*vec tmp = V(0,0,0);
+  
+  float a_norm = n(A), b_norm = n(B);
+  vec A_n = U(A), B_n = U(B);
+  tmp.x = pow(A_n.x+1,ratio)*pow(B_n.x+1,1-ratio)-1;
+  tmp.y = pow(A_n.y+1,ratio)*pow(B_n.y+1,1-ratio)-1;
+  tmp.z = pow(A_n.z+1,ratio)*pow(B_n.z+1,1-ratio)-1;
+  return V(pow(a_norm,ratio)*pow(b_norm,1-ratio), tmp); */
+  return V(ratio,A,1-ratio,B);
+}

@@ -30,7 +30,7 @@ float t=0, f=0, emit_timer = 0, STANDARD_TIMER = 0.01;
 generator G = new generator();
 obstacle O = new obstacle();
 float dynamicBlendParameter=.5;
-
+int collision[] = new int[2];
 // String SCC = "-"; // info on current corner
    
 // ****************************** VIEW PARAMETERS *******************************************************
@@ -74,7 +74,8 @@ void setup() {
   G.setCenter(P(width/2, height/2, 0));
   O.init().setCenter(C.Pof(1));
   randomSeed(10);
- 
+  collision[0] = -1;
+  collision[1] = -1;
   F=P(); E=P(0,0,500);
   for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
   }
