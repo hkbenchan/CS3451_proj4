@@ -111,7 +111,7 @@ void draw() {
         println(Pick().x+" "+Pick().y+" "+Pick().z);
        if(key=='c') { C0.delete();  G.resetQueue();redrawMainCurve();} //delete selected pt
        if(key=='a') { C0.append(Pick());   G.resetQueue();redrawMainCurve();}// C0.append(Pick());} //append pt at the end
-       if(key=='i') { C0.insert();  G.resetQueue();redrawMainCurve();} // insert control pt
+       if(key=='i') { C0.insert(); redrawMainCurve();} // insert control pt
        if(key==',') { G.setCenter(Pick());} // insert control pt
       
       
@@ -201,8 +201,8 @@ void mousePressed() {pressed=true;
 void mouseDragged() {
   if(keyPressed&&key=='z') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
   if(keyPressed&&key=='x') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
-  if(keyPressed&&key=='b') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
-  if(keyPressed&&key=='v') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );redrawMainCurve() ;} // move selected vertex of curve Cb in XZ
+  if(keyPressed&&key=='b') {C0.dragAll( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
+  if(keyPressed&&key=='v') {C0.dragAll( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); redrawMainCurve() ;} // move selected vertex of curve Cb in XZ
  // if(keyPressed&&key=='x') {M.add(float(mouseX-pmouseX),I).add(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
 //  if(keyPressed&&key=='z') {M.add(float(mouseX-pmouseX),I).add(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane
 //  if(keyPressed&&key=='X') {M.addROI(float(mouseX-pmouseX),I).addROI(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
@@ -345,5 +345,6 @@ void redrawMainCurve(){
   mainC.subdivide();
   mainC.subdivide();
   mainC.resample(150);
+  G.resize(G.radius);
 }
 

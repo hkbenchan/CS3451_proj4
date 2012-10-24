@@ -183,7 +183,7 @@ class Curve {
   void resample(int nn) { // resamples the curve with new nn vertices
     if(nn<3) return;
     float L = length();  // current total length  
-    float d = L / nn;   // desired arc-length spacing                        
+    float d = L / (nn-1);   // desired arc-length spacing                        
     float rd=d;        // remaining distance to next sample
     float cl=d(P[0],P[1]);       // length of remaining portion of current edge
     int k=0;        // counters
