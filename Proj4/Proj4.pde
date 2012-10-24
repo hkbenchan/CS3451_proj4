@@ -107,9 +107,9 @@ void draw() {
        fill(white,0); noStroke(); if(showControl) C0.showSamples(20);
        C0.pick(Pick());
         println(Pick().x+" "+Pick().y+" "+Pick().z);
-       if(key=='c') { C0.delete(); drawMainCurve();} //delete selected pt
-       if(key=='a') { C0.append(Pick()); drawMainCurve();}// C0.append(Pick());} //append pt at the end
-       if(key=='i') { C0.insert(); drawMainCurve();} // insert control pt
+       if(key=='c') { C0.delete(); drawMainCurve(); G.resetQueue();} //delete selected pt
+       if(key=='a') { C0.append(Pick()); drawMainCurve();  G.resetQueue();}// C0.append(Pick());} //append pt at the end
+       if(key=='i') { C0.insert(); drawMainCurve(); G.resetQueue();} // insert control pt
        if(key==',') { G.setCenter(Pick());} // insert control pt
       
       

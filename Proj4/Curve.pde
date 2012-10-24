@@ -121,10 +121,10 @@ class Curve {
    //** 4-pt subduvide
   Curve FourPtSubdivide(){
       subdivide();
-    if(n<100)
-       resample2(n) ;
+    if(n<200)
+       resample(n) ;
     else
-       resample2(100) ;
+       resample(200) ;
     return this;
   }
    //**** resample

@@ -23,6 +23,7 @@ class generator {
     //float magnitude = random(1,4*temp_r)/temp_r;
     int new_p = (Integer) queue.pop();
     p[new_p].setPosition(this.center.x + random_x,this.center.y + random_y,this.center.z + random_z).setVelocity(0,0,0);
+    p[new_p].closestPos=0;
     active_p++;
     display[new_p] = true;
     return this;
@@ -127,7 +128,7 @@ class generator {
           }
           //newVel=U(newVel);
           float decayRatio=0;
-          if(distanceParticileClosestC<500)
+          if(distanceParticileClosestC<310)
              decayRatio=sq(cos(distanceParticileClosestC*PI/300));//cosine square decay function,  decay according to distance from 0 to 300
           if (i==0 ||i==1)
              println(i+"  "+decayRatio);
