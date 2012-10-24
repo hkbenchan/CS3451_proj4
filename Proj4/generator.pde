@@ -59,24 +59,17 @@ class generator {
   generator displayG() {
     pushMatrix();
     noStroke();
+    fill(orange);
     lights();
     translate(this.center.x,this.center.y,this.center.z);
-    sphereDetail(50);
+    sphereDetail(15);
     sphere(this.radius);
     popMatrix();
     return this;
   }
   
   generator displayGP() {
-    pushMatrix();
-    noStroke();
-    stroke(green);
-    fill(yellow);
-    lights();
-    translate(this.center.x,this.center.y,this.center.z);
-    sphereDetail(50);
-    sphere(this.radius);
-    popMatrix();
+    this.displayG();
     for (int i=0; i<max_p; i++) { 
       if (display[i]) p[i].display(); 
     }

@@ -163,7 +163,7 @@ void draw() {
   if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
   
  
-    // generator animate
+  // generator animate
      
   emit_timer = 1.0/G.emit_rate;
   G.displayGP();
@@ -212,7 +212,7 @@ void mouseDragged() {
   
   // geneator related
   if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX));} // adjust generator size
-  if(keyPressed && key=='t') {G.emit_rate += int(mouseX-pmouseX)/10;}
+  if(keyPressed && key=='G') {G.emit_rate += int(mouseX-pmouseX)/10;}
   
   if(keyPressed && key=='s') {dynamicBlendParameter+=float(mouseX-pmouseX)/1000 ;if(dynamicBlendParameter>=1) dynamicBlendParameter=1; if(dynamicBlendParameter<=0) dynamicBlendParameter=0;}//ajust blend parameter
   
@@ -344,6 +344,6 @@ void redrawMainCurve(){
   mainC.subdivide();
   mainC.subdivide();
   mainC.subdivide();
-  mainC.resample(100);
+  mainC.resample(150);
 }
 
