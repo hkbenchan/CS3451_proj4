@@ -164,7 +164,8 @@ void draw() {
      
   emit_timer = 1.0/G.emit_rate;
   G.displayGP();
-  t+=STANDARD_TIMER; f+=STANDARD_TIMER; G.updateParticles(STANDARD_TIMER);
+  t+=STANDARD_TIMER; f+=STANDARD_TIMER;
+  G.updateParticles(1);
   if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
   
   
@@ -235,7 +236,7 @@ void keyPressed() {
   if(key=='h') {} // hide picked vertex (mousePressed)
   if(key=='i') {}
   if(key=='j') {}
-  if(key=='k') {G.renderNewParticle().renderNewParticle(); G.p[0].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+30); G.p[1].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+70);}
+  if(key=='k') {G.renderNewParticle().renderNewParticle(); G.p[0].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+10); G.p[1].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+60);}
   if(key=='l') {}
  // if(key=='m') {showMesh=!showMesh;}
  // if(key=='n') {showNMBE=!showNMBE;}

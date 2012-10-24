@@ -126,10 +126,12 @@ class generator {
               newVel=V(mainC.P[p[i].closestPos-1],mainC.P[p[i].closestPos+1]);    
           }
           //newVel=U(newVel);
-          float decayRatio=sq(cos(distanceParticileClosestC*PI/1000));//cosine square decay function,  decay according to distance from 0 to 1000
+          float decayRatio=0;
+          if(distanceParticileClosestC<500)
+             decayRatio=sq(cos(distanceParticileClosestC*PI/300));//cosine square decay function,  decay according to distance from 0 to 300
           if (i==0 ||i==1)
              println(i+"  "+decayRatio);
-          newVel=V(5*decayRatio,newVel);
+          newVel=V(decayRatio,newVel);
           if (addDynamic){
                 if(p[i].closestPos==0)
                        p[i].setVelocity(newVel.x,newVel.y,newVel.z);
