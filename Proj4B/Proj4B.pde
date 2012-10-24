@@ -167,8 +167,7 @@ void draw() {
   emit_timer = 1.0/G.emit_rate;
   G.displayGP();
   O.display();
-  t+=STANDARD_TIMER; f+=STANDARD_TIMER; 
-  G.updateParticles(1);
+  t+=STANDARD_TIMER; f+=STANDARD_TIMER; G.updateParticles(1);
   if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
   
   

@@ -161,7 +161,7 @@ void draw() {
   if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
   
  
-    // generator animate
+  // generator animate
      
   emit_timer = 1.0/G.emit_rate;
   G.displayGP();
