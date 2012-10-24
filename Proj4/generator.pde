@@ -129,36 +129,13 @@ class generator {
                 if(p[i].closestPos==0)
                        p[i].setVelocity(newVel.x,newVel.y,newVel.z);
                 else{
-                       p[i].setVelocity((p[i].velocity.x+dynamicBlendParameter*(newVel.x-p[i].velocity.x)),(p[i].velocity.y+dynamicBlendParameter*(newVel.y-p[i].velocity.y)),(p[i].velocity.z+dynamicBlendParameter*(newVel.z-p[i].velocity.z)));
-                       
+                       p[i].setVelocity(average(newVel,p[i].velocity,dynamicBlendParameter));
                 }
             
           }else{
-                    if(p[i].closestPos==0)
-                       p[i].setVelocity(newVel.x,newVel.y,newVel.z);
-                    else{
-                      // println("in here"+p[i].velocity.x+"  "+p[i].velocity.y+"  "+p[i].velocity.z);
-                      //calculate geometric mean
-                 /*     float x,y,z;
-                      if(p[i].velocity.x*newVel.x<0)
-                          x=-sqrt(-p[i].velocity.x*newVel.x);
-                      else
-                          x=sqrt(p[i].velocity.x*newVel.x);
-                      
-                      if(p[i].velocity.y*newVel.y<0)
-                          y=-sqrt(-p[i].velocity.y*newVel.y);
-                      else
-                          y=sqrt(p[i].velocity.y*newVel.y);
-                          
-                      if(p[i].velocity.z*newVel.z<0)
-                          z=-sqrt(-p[i].velocity.z*newVel.z);
-                      else
-                          z=sqrt(p[i].velocity.z*newVel.z);  */
-                      
-                      p[i].setVelocity((p[i].velocity.x+newVel.x)/2,(p[i].velocity.y+newVel.y)/2,(p[i].velocity.z+newVel.z)/2);
-                       
-                    }
-                  //  println(p[i].velocity.x+"  "+p[i].velocity.y+"  "+p[i].velocity.z);
+                  
+                  p[i].setVelocity(newVel.x,newVel.y,newVel.z);
+                 
           }
        }
        
