@@ -206,12 +206,17 @@ void mouseDragged() {
 //  if(keyPressed&&key=='z') {M.add(float(mouseX-pmouseX),I).add(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane
 //  if(keyPressed&&key=='X') {M.addROI(float(mouseX-pmouseX),I).addROI(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
 //  if(keyPressed&&key=='Z') {M.addROI(float(mouseX-pmouseX),I).addROI(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane 
-    if(keyPressed&&key=='m') {G.dragCenter( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  } // move Generator in screen plane
-    if(keyPressed&&key=='n') {G.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move Generator  in screen plane 
-  
+
   // geneator related
   if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX));} // adjust generator size
   if(keyPressed && key=='t') {G.emit_rate += int(mouseX-pmouseX)/10;}
+  if(keyPressed&&key=='m') {G.dragCenter( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  } // move Generator in screen plane
+  if(keyPressed&&key=='n') {G.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move Generator  in screen plane 
+    
+  // obstacle related
+  if (keyPressed && key=='e') {O.resize(O.radius+float(mouseX-pmouseX)); } // adjust the obstacle size
+    if(keyPressed&&key=='o') {O.dragCenter( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  } // move obstacle in screen plane
+  if(keyPressed&&key=='O') {O.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move obstacle in screen plane 
   
   if(keyPressed && key=='s') {dynamicBlendParameter+=float(mouseX-pmouseX)/1000 ;if(dynamicBlendParameter>=1) dynamicBlendParameter=1; if(dynamicBlendParameter<=0) dynamicBlendParameter=0;}//ajust blend parameter
   
