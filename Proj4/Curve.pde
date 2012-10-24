@@ -92,7 +92,7 @@ class Curve {
       }; 
     }
   void addDif(Curve R, Curve C) {for(int i=0;i<n; i++) P[i].add(V(R.pt(i),C.pt(i)));}    
-  float length () {float L=0; for (int i=0; i<n; i++) L+=d(P[i],P[next(i)]);  return(L); }    
+  float length () {float L=0; for (int i=0; i<n-1; i++) L+=d(P[i],P[i+1]);  return(L); }    
 
 // ******************************************************************************************** LACING ***************
   Curve resampleDistance(float r) { 
@@ -120,7 +120,7 @@ class Curve {
  
    //** 4-pt subduvide
   Curve FourPtSubdivide(){
-      subdivide();
+    subdivide();
     if(n<200)
        resample(n) ;
     else
@@ -185,20 +185,23 @@ class Curve {
     float L = length();  // current total length  
     float d = L / nn;   // desired arc-length spacing                        
     float rd=d;        // remaining distance to next sample
-    float cl=0;        // length of remaining portion of current edge
-    int k=0,nk;        // counters
+    float cl=d(P[0],P[1]);       // length of remaining portion of current edge
+    int k=0;        // counters
     pt [] R = new pt [nn]; // temporary array for the new points
     pt Q;
     int s=0;
     Q=P[0];         
-    R[s++]=P(Q);     
+    R[s++]=P(Q);   
+   // println(nn+"   "+n);
     while (s<nn) {
-       nk=next(k);
-       cl=d(Q,P[nk]);                            
-       if (rd<cl) {Q=P(Q,rd,P[nk]); R[s++]=P(Q); cl-=rd; rd=d; } 
-       else {rd-=cl; Q.set(P[nk]); k++; };
-       };
-     n=s;   for (int i=0; i<n; i++)  P[i].set(R[i]);
+   //    println(s+"  "+k+"  "+cl+"  "+rd+" "+d);
+       if (rd<cl) {Q=advP(Q,(float)rd/cl,P[k+1]); R[s++]=P(Q); cl-=rd; rd=d; } 
+       else {rd-=cl; Q.set(P[k+1]); k++;  cl=d(Q,P[k+1]);};
+    };
+     n=nn;   
+     for (int i=0; i<n; i++)
+        P[i].set(R[i]);
+
    }
    
    void save() {

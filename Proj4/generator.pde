@@ -106,7 +106,7 @@ class generator {
   }
  
   generator updateVelocity() {
-    println(mainC.n);
+    //println(mainC.n);
     for (int i=0; i<max_p; i++) { //for each particle do
         if (display[i]) {
           //findClosestPtC(P(p[i].x,p[i].y,p[i].z));
@@ -130,8 +130,7 @@ class generator {
           float decayRatio=0;
           if(distanceParticileClosestC<310)
              decayRatio=sq(cos(distanceParticileClosestC*PI/300));//cosine square decay function,  decay according to distance from 0 to 300
-          if (i==0 ||i==1)
-             println(i+"  "+decayRatio);
+        
           newVel=V(decayRatio,newVel);
           if (addDynamic){
                 if(p[i].closestPos==0)

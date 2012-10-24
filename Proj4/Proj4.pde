@@ -29,6 +29,7 @@ Boolean
 float t=0, f=0, emit_timer = 0, STANDARD_TIMER = 0.01;
 generator G = new generator();
 float dynamicBlendParameter=.5;
+float TT;
 
 // String SCC = "-"; // info on current corner
    
@@ -43,11 +44,11 @@ void initView() {Q=P(0,0,0); I=V(1,0,0); J=V(0,1,0); K=V(0,0,1); F = P(0,0,0); E
 float volume1=0, volume0=0;
 float sampleDistance=1;
 // ******************************** CURVES & SPINES ***********************************************
-Curve C0 = new Curve(500), S0 = new Curve(), C1 = new Curve(5), S1 = new Curve();  
+Curve C0 = new Curve(500); //S0 = new Curve(), C1 = new Curve(5), S1 = new Curve();  
 Curve mainC = new Curve(500);// control points and spines 0 and 1
-Curve C= new Curve(11,130,P());
-int nsteps=250; // number of smaples along spine
-float sd=10; // sample distance for spine
+//Curve C= new Curve(11,130,P());
+//int nsteps=250; // number of smaples along spine
+//float sd=10; // sample distance for spine
 pt sE = P(), sF = P(); vec sU=V(); //  view parameters (saved with 'j'
 
 // *******************************************************************************************************************    SETUP
@@ -65,7 +66,7 @@ void setup() {
   // ***************** Load Curve
   C0.loadPts();
  //  C0.empty().append(C.Pof(0)).append(C.Pof(1)).append(C.Pof(2)).append(C.Pof(3)).append(C.Pof(4));
-   drawMainCurve();
+  redrawMainCurve();
   // ***************** Set view
   
   // ***************** Generator Init
@@ -80,6 +81,7 @@ void setup() {
   
 // ******************************************************************************************************************* DRAW      
 void draw() {  
+  TT=1./30;
   background(white);
   //fill(black); 
   if (addDynamic)
@@ -107,9 +109,9 @@ void draw() {
        fill(white,0); noStroke(); if(showControl) C0.showSamples(20);
        C0.pick(Pick());
         println(Pick().x+" "+Pick().y+" "+Pick().z);
-       if(key=='c') { C0.delete(); drawMainCurve(); G.resetQueue();} //delete selected pt
-       if(key=='a') { C0.append(Pick()); drawMainCurve();  G.resetQueue();}// C0.append(Pick());} //append pt at the end
-       if(key=='i') { C0.insert(); drawMainCurve(); G.resetQueue();} // insert control pt
+       if(key=='c') { C0.delete();  G.resetQueue();redrawMainCurve();} //delete selected pt
+       if(key=='a') { C0.append(Pick());   G.resetQueue();redrawMainCurve();}// C0.append(Pick());} //append pt at the end
+       if(key=='i') { C0.insert();  G.resetQueue();redrawMainCurve();} // insert control pt
        if(key==',') { G.setCenter(Pick());} // insert control pt
       
       
@@ -118,9 +120,9 @@ void draw() {
      
 
   // -------------------------------------------------------- create control curves  ----------------------------------   
-    stroke(black); noFill(); C0.showSamples(3);
+    stroke(black); noFill(); C0.showSamples(4);
     
-    stroke(blue);  mainC.showSamples(1);mainC.drawEdges(); 
+    stroke(blue);  mainC.showSamples(3);mainC.drawEdges(); 
 
    // -------------------------------------------------------- create and show spines  ----------------------------------   
 //   S0=S0.makeFrom(C0,500).resampleDistance(sampleDistance);
@@ -161,12 +163,12 @@ void draw() {
   if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
   
  
-  // generator animate
+    // generator animate
      
   emit_timer = 1.0/G.emit_rate;
   G.displayGP();
   t+=STANDARD_TIMER; f+=STANDARD_TIMER;
-  G.updateParticles(1);
+  G.updateParticles(TT);
   if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
   
   
@@ -197,10 +199,10 @@ void mousePressed() {pressed=true;
 }
   
 void mouseDragged() {
-  if(keyPressed&&key=='z') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  drawMainCurve();} // move selected vertex of curve C in screen plane
-  if(keyPressed&&key=='x') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );drawMainCurve(); } // move selected vertex of curve C in screen plane
-  if(keyPressed&&key=='b') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); drawMainCurve();} // move selected vertex of curve C in screen plane
-  if(keyPressed&&key=='v') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); drawMainCurve();} // move selected vertex of curve Cb in XZ
+  if(keyPressed&&key=='z') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
+  if(keyPressed&&key=='x') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
+  if(keyPressed&&key=='b') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
+  if(keyPressed&&key=='v') {C0.dragAll(0,5, V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );redrawMainCurve() ;} // move selected vertex of curve Cb in XZ
  // if(keyPressed&&key=='x') {M.add(float(mouseX-pmouseX),I).add(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
 //  if(keyPressed&&key=='z') {M.add(float(mouseX-pmouseX),I).add(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane
 //  if(keyPressed&&key=='X') {M.addROI(float(mouseX-pmouseX),I).addROI(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
@@ -254,9 +256,9 @@ void keyPressed() {
   if(key=='y') {}
   if(key=='z') {} // drag mesh vertex in xz (mouseDragged)
    
-  if(key=='A') {C.savePts();}
+//  if(key=='A') {C.savePts();}
   if(key=='B') {}
-  if(key=='C') {C.loadPts();} // save curve
+//  if(key=='C') {C.loadPts();} // save curve
   if(key=='D') {} //move in depth without rotation (draw)
   //if(key=='E') {M.smoothen(); M.normals();}
   if(key=='F') {}
@@ -295,7 +297,7 @@ void keyPressed() {
   //if(key=='_') {M.flatShading=!M.flatShading;}
 //  if(key=='+') {M.flip();} // flip edge of M
 //  if(key=='-') {M.showEdges=!M.showEdges;}
-  if(key=='=') {C.P[5].set(C.P[0]); C.P[6].set(C.P[1]); C.P[7].set(C.P[2]); C.P[8].set(C.P[3]); C.P[9].set(C.P[4]);}
+ // if(key=='=') {C.P[5].set(C.P[0]); C.P[6].set(C.P[1]); C.P[7].set(C.P[2]); C.P[8].set(C.P[3]); C.P[9].set(C.P[4]);}
   if(key=='{') {showFrenetQuads=!showFrenetQuads;}
   if(key=='}') {}
   if(key=='|') {}
@@ -334,13 +336,14 @@ int pictureCounter=0;
 Boolean snapping=false; // used to hide some text whil emaking a picture
 void snapPicture() {saveFrame("PICTURES/P"+nf(pictureCounter++,3)+".jpg"); snapping=false;}
 
-void drawMainCurve(){
+void redrawMainCurve(){
   mainC.empty();
   for(int i=0;i<C0.n;i++)
     mainC.append(C0.P[i]);
-  mainC.FourPtSubdivide();
-  mainC.FourPtSubdivide();
-  mainC.FourPtSubdivide();
-  mainC.FourPtSubdivide();
+  mainC.subdivide();
+  mainC.subdivide();
+  mainC.subdivide();
+  mainC.subdivide();
+  mainC.resample(100);
 }
 

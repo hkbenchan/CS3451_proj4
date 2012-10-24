@@ -69,7 +69,12 @@ class pt { float x=0,y=0,z=0;
 // =====  point functions
 pt P() {return new pt(); };                                            // point (x,y,z)
 pt P(float x, float y, float z) {return new pt(x,y,z); };                                            // point (x,y,z)
-pt P(pt A) {return new pt(A.x,A.y,A.z); };                                                           // copy of point P
+pt P(pt A) {return new pt(A.x,A.y,A.z); };      // copy of point P
+pt advP(pt A,float s, pt B){ //advance by a distance s
+  pt temp=P(A);
+  temp.add(s,V(A,B));
+  return temp;
+}
 pt P(pt A, float s, pt B) {return new pt(A.x+s*(B.x-A.x),A.y+s*(B.y-A.y),A.z+s*(B.z-A.z)); };        // A+sAB
 pt P(pt A, pt B) {return P((A.x+B.x)/2.0,(A.y+B.y)/2.0,(A.z+B.z)/2.0); }                             // (A+B)/2
 pt P(pt A, pt B, pt C) {return new pt((A.x+B.x+C.x)/3.0,(A.y+B.y+C.y)/3.0,(A.z+B.z+C.z)/3.0); };     // (A+B+C)/3
