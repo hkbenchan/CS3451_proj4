@@ -63,7 +63,7 @@ collisionTracker obstacleCollisionTest() {
       float q_A = n2(U), q_B = -2*d(AB,U), q_C = n2(AB) - pow(r_total,2);
       float delta = pow(q_B,2)- 4*q_A*q_C;
       if (delta<0) continue;
-      if (abs(q_C) <0.00000001) {
+      if (abs(q_C) <0.0000000000000001) {
         s1 = 0; s2 = -q_A/q_B;
       } else {
         s1 = (-q_B+sqrt(delta))/(2*q_C); s2 =  (-q_B-sqrt(delta))/(2*q_C);
