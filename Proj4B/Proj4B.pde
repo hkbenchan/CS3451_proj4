@@ -32,7 +32,6 @@ Boolean
 float t=0, f=0, emit_timer = 0, STANDARD_TIMER = 0.01;
 generator G = new generator();
 obstacle O = new obstacle();
-collisionTracker cTracker = new collisionTracker();
 float dynamicBlendParameter=.5;
 float TT;
 
@@ -174,12 +173,6 @@ void draw() {
   if(keyPressed&&key=='D'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K); }  //   Moves E forward/backward
   if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
   
-  collisionTracker cT2 = obstacleCollisionTest();
-  
-  // collision happens here
-  
-  if (cT2.next_ct <= TT) 
-    println("collision Time: "+cT2.next_ct+" id: "+cT2.A);
   
   // generator animate
      
@@ -187,6 +180,28 @@ void draw() {
   G.displayGP();
   O.display();
   t+=STANDARD_TIMER; f+=STANDARD_TIMER;
+  G.updateVelocity();
+  //*********************************************Collision TEST ************************************************//
+  collisionTracker cT = runCollisionTest();
+  
+  // collision happens here
+  while (cT.next_ct <= TT) {
+     //println(cT2.next_ct+" "+cT2.A);
+     G.updateParticles(cT.next_ct);
+     //G.removeParticle(cT.A);
+     
+     // if (cT.obstacle_involved) 
+     
+     TT -= cT.next_ct;
+     cT = runCollisionTest(); 
+  }
+  
+  /*if (cT2.next_ct <= TT) 
+    println("collision Time: "+cT2.next_ct+" id: "+cT2.A);
+  */
+  
+  // end of collision test
+  
   G.updateParticles(TT);
   if (f>= emit_timer) { f = 0; G.renderNewParticle(); }
   
@@ -262,7 +277,7 @@ void keyPressed() {
   if(key=='h') {} // hide picked vertex (mousePressed)
   if(key=='i') {}
   if(key=='j') {}
-  if(key=='k') {G.renderNewParticle().renderNewParticle(); G.p[0].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+10); G.p[1].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+60);}
+  if(key=='k') {G.renderNewParticle();}
   if(key=='l') {}
  // if(key=='m') {showMesh=!showMesh;}
  // if(key=='n') {showNMBE=!showNMBE;}
