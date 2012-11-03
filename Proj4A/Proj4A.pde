@@ -1,6 +1,9 @@
 //*********************************************************************
-//**                            3D template                          **
-//**                 Jarek Rossignac, Oct  2012                      **   
+//      project 4A, 3D velocity field curve and particle simulation
+//      Author(s): Yik Wai Ng (GTID: 902954691) ; Ho Pan Chan (GTID: 902956511)
+//      Class: CS3451 
+//      Last update on: November 3, 2012
+//      Usage: refer to help text ... display help text by pressing shift + ?, to toggle, press shift + ? again                                                               **   
 //*********************************************************************
 import processing.opengl.*;                // load OpenGL libraries and utilities
 import javax.media.opengl.*; 
@@ -53,7 +56,7 @@ pt sE = P(), sF = P(); vec sU=V(); //  view parameters (saved with 'j'
 
 // *******************************************************************************************************************    SETUP
 void setup() {
-  size(800, 800, OPENGL);  
+  size(1200, 700, OPENGL);  
   setColors(); sphereDetail(6); 
   PFont font = loadFont("GillSans-24.vlw"); textFont(font, 20);  // font for writing labels on //  PFont font = loadFont("Courier-14.vlw"); textFont(font, 12); 
   // ***************** OpenGL and View setup
@@ -83,12 +86,7 @@ void setup() {
 void draw() {  
   TT=1./30;
   background(white);
-  //fill(black); 
-  if (addDynamic)
-     text("Add Dynamic: Yes ; Blend Parameter: "+dynamicBlendParameter,10,20);
-  else
-     text("Add Dynamic: No",10,20);
-  //noFill();
+ 
   // -------------------------------------------------------- Help ----------------------------------
   if(showHelpText) {
     camera(); // 2D display to show cutout
@@ -97,12 +95,23 @@ void draw() {
     return;
     } 
     
+  fill(black);
+  specular(0,0,0); shininess(0);
+  text("Emission rate: "+(int)G.emit_rate,10,40);
+  text("Press ?: HELP ",10,60);
+  if (addDynamic)
+     text("Add Dynamic: Yes ; Blend Parameter: "+dynamicBlendParameter,10,20);
+  else
+     text("Add Dynamic: No",10,20);
+  
   // -------------------------------------------------------- 3D display : set up view ----------------------------------
   camera(E.x, E.y, E.z, F.x, F.y, F.z, U.x, U.y, U.z); // defines the view : eye, ctr, up
   vec Li=U(A(V(E,F),0.1*d(E,F),J));   // vec Li=U(A(V(E,F),-d(E,F),J)); 
   directionalLight(255,255,255,Li.x,Li.y,Li.z); // direction of light: behind and above the viewer
   specular(255,255,0); shininess(5);
   
+  
+
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
     if(pressed) {
      if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i'||key==',')) {
@@ -120,19 +129,19 @@ void draw() {
      
 
   // -------------------------------------------------------- create control curves  ----------------------------------   
-    stroke(black); noFill(); C0.showSamples(4);
+    stroke(black); noFill(); C0.showSamples();
     
-    stroke(blue);  mainC.showSamples(3);mainC.drawEdges(); 
+    stroke(blue);  mainC.showSamples();mainC.drawEdges(); 
 
    // -------------------------------------------------------- create and show spines  ----------------------------------   
 //   S0=S0.makeFrom(C0,500).resampleDistance(sampleDistance);
 //   stroke(blue); noFill(); if(showSpine) S0.drawEdges(); 
    
    // -------------------------------------------------------- compute spine normals  ----------------------------------   
-   mainC.prepareSpine(0);
+
   
    // -------------------------------------------------------- show tube ----------------------------------   
-   if(showTube) mainC.showTube(10,4,10,orange); 
+   if(showTube) {   mainC.prepareSpine(0); mainC.showTube(10,4,10,orange); }
    
    // -------------------------------------------------------- create and move mesh ----------------------------------   
  //  pt Q0=C.Pof(10); //fill(white); show(Q0,4);
@@ -179,7 +188,7 @@ void draw() {
 //  if(showMesh&&showSilhouette) {stroke(dbrown); M.drawSilhouettes(); }  // display silhouettes
 //  strokeWeight(2); stroke(red);if(showMesh&&showNMBE) M.showMBEs();  // manifold borders
   camera(); // 2D view to write help text
-  writeFooterHelp();
+  //writeFooterHelp();
   hint(ENABLE_DEPTH_TEST); // show silouettes
 
   // -------------------------------------------------------- SNAP PICTURE ---------------------------------- 
@@ -212,7 +221,7 @@ void mouseDragged() {
   
   // geneator related
   if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX));} // adjust generator size
-  if(keyPressed && key=='G') {G.emit_rate += int(mouseX-pmouseX)/10;}
+  if(keyPressed && key=='G') {G.emit_rate += float(int(mouseX-pmouseX))/10;if (G.emit_rate<=0) G.emit_rate=0.01; if (G.emit_rate>=50) G.emit_rate=50; }
   
   if(keyPressed && key=='s') {dynamicBlendParameter+=float(mouseX-pmouseX)/1000 ;if(dynamicBlendParameter>=1) dynamicBlendParameter=1; if(dynamicBlendParameter<=0) dynamicBlendParameter=0;}//ajust blend parameter
   
@@ -267,7 +276,7 @@ void keyPressed() {
   if(key=='I') {}
   if(key=='J') {}
   if(key=='K') {}
- // if(key=='L') {M.loadMeshVTS().updateON().resetMarkers().computeBox(); F.set(M.Cbox); E.set(P(F,M.rbox*2,K)); for(int i=0; i<10; i++) vis[i]=true;}
+  if(key=='L') {C0.loadPts();G.loadInfo();redrawMainCurve();}
   if(key=='M') {}
  // if(key=='N') {M.next();}
   if(key=='O') {}
