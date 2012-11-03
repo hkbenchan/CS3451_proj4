@@ -29,7 +29,7 @@ collisionTracker particleCollisionTest() {
              if (abs(q_C) <0.00000001) {
                s1 = 0; s2 = -q_A/q_B;
              } else {
-               s1 = (-q_B+sqrt(delta))/2*q_C; s2 =  (-q_B-sqrt(delta))/2*q_C;
+               s1 = (-q_B+sqrt(delta))/(2*q_C); s2 =  (-q_B-sqrt(delta))/(2*q_C);
              }
              
              if (0<s1 && s1<cT.next_ct) { 
@@ -66,7 +66,7 @@ collisionTracker obstacleCollisionTest() {
       if (abs(q_C) <0.00000001) {
         s1 = 0; s2 = -q_A/q_B;
       } else {
-        s1 = (-q_B+sqrt(delta))/2*q_C; s2 =  (-q_B-sqrt(delta))/2*q_C;
+        s1 = (-q_B+sqrt(delta))/(2*q_C); s2 =  (-q_B-sqrt(delta))/(2*q_C);
       }
    
       if (0<s1 && s1<cT.next_ct) { 

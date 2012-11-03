@@ -1,5 +1,5 @@
 //*********************************************************************
-//      project 4B, 3D velocity field curve and particle simulation
+//      project 4B, 3D velocity field curve, particle simulation and collision
 //      Author(s): Yik Wai Ng (GTID: 902954691) ; Ho Pan Chan (GTID: 902956511)
 //      Class: CS3451 
 //      Last update on: November 3, 2012
@@ -306,8 +306,8 @@ void keyPressed() {
   //if(key=='`') {M.perturb();}
   if(key=='~') {showSpine=!showSpine;}
   if(key=='!') {snapping=true;}
-  if(key=='@') {}
-  if(key=='#') {}
+  if(key=='@') { G.emit_rate = 0.1 ;}
+  if(key=='#') { G.emit_rate = 0 ;}
 //  if(key=='$') {M.moveTo(C.Pof(10));} // ???????
   if(key=='%') {}
   if(key=='&') {}
