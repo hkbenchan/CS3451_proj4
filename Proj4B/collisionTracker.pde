@@ -1,7 +1,7 @@
 // collision tracker class
 
 class collisionTracker {
-  float next_ct = 1<<31-1; // next collision time
+  float next_ct = 1<<30-1; // next collision time
   int A = -1, B = -1; // collision id
   boolean obstacle_involved = false; // B will be ignore if obstacle_involved is true 
   

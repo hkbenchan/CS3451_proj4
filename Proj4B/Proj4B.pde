@@ -174,7 +174,10 @@ void draw() {
   if(keyPressed&&key=='D'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K); }  //   Moves E forward/backward
   if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
   
- 
+  collisionTracker cT2 = obstacleCollisionTest();
+  //if (cT2.next_ct <= TT)
+  println("collision Time: "+cT2.next_ct+" id: "+cT2.A);
+  
   // generator animate
      
   emit_timer = 1.0/G.emit_rate;
