@@ -190,7 +190,14 @@ void draw() {
      G.updateParticles(cT.next_ct);
      //G.removeParticle(cT.A);
      
-     // if (cT.obstacle_involved) 
+     if (cT.obstacle_involved){
+         println(G.p[cT.A].velocity.x+" "+G.p[cT.A].velocity.y+" "+G.p[cT.A].velocity.z);
+         vec N=U(G.p[cT.A].pos,O.pos);
+         vec U1=V(d(G.p[cT.A].velocity,N),N);
+         G.p[cT.A].setVelocity(V(G.p[cT.A].velocity,-2,U1));
+         println("in");
+     }else{
+     } 
      
      TT -= cT.next_ct;
      cT = runCollisionTest(); 
