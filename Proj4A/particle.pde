@@ -21,7 +21,7 @@ class particle {
     fill(green);
     pushMatrix();
     translate(x, y, z);
-    sphereDetail(4);
+    sphereDetail(5);
     sphere(this.radius);
     popMatrix();
     return this;
