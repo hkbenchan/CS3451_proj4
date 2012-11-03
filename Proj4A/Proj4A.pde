@@ -3,7 +3,7 @@
 //      Author(s): Yik Wai Ng (GTID: 902954691) ; Ho Pan Chan (GTID: 902956511)
 //      Class: CS3451 
 //      Last update on: November 3, 2012
-//      Usage: refer to help text ... display help text by pressing shift + ?, to toggle, press shift + ? again                                                               **   
+//      Usage: refer to help text ... display help text by pressing shift + ?, to toggle, press shift + ? again                                                        
 //*********************************************************************
 import processing.opengl.*;                // load OpenGL libraries and utilities
 import javax.media.opengl.*; 
@@ -33,25 +33,17 @@ float t=0, f=0, emit_timer = 0, STANDARD_TIMER = 0.01;
 generator G = new generator();
 float dynamicBlendParameter=.5;
 float TT;
-
-// String SCC = "-"; // info on current corner
    
 // ****************************** VIEW PARAMETERS *******************************************************
 pt F = P(0,0,0); pt T = P(0,0,0); pt E = P(0,0,1000); vec U=V(0,1,0);  // focus  set with mouse when pressing ';', eye, and up vector
 pt Q=P(0,0,0); vec I=V(1,0,0); vec J=V(0,1,0); vec K=V(0,0,1); // picked surface point Q and screen aligned vectors {I,J,K} set when picked
 void initView() {Q=P(0,0,0); I=V(1,0,0); J=V(0,1,0); K=V(0,0,1); F = P(0,0,0); E = P(0,0,1000); U=V(0,1,0); } // declares the local frames
 
-// ******************************** MESHES ***********************************************
-//Mesh M=new Mesh(); // meshes for models M0 and M1
-
 float volume1=0, volume0=0;
 float sampleDistance=1;
 // ******************************** CURVES & SPINES ***********************************************
 Curve C0 = new Curve(500); //S0 = new Curve(), C1 = new Curve(5), S1 = new Curve();  
 Curve mainC = new Curve(500);// control points and spines 0 and 1
-//Curve C= new Curve(11,130,P());
-//int nsteps=250; // number of smaples along spine
-//float sd=10; // sample distance for spine
 pt sE = P(), sF = P(); vec sU=V(); //  view parameters (saved with 'j'
 
 // *******************************************************************************************************************    SETUP
@@ -63,19 +55,13 @@ void setup() {
   glu= ((PGraphicsOpenGL) g).glu;  PGraphicsOpenGL pgl = (PGraphicsOpenGL) g;  gl = pgl.beginGL();  pgl.endGL();
   initView(); // declares the local frames for 3D GUI
 
-  // ***************** Load meshes
-//  M.declareVectors().loadMeshVTS("data/horse.vts");
-//  M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
-  // ***************** Load Curve
   C0.loadPts();
- //  C0.empty().append(C.Pof(0)).append(C.Pof(1)).append(C.Pof(2)).append(C.Pof(3)).append(C.Pof(4));
   redrawMainCurve();
   // ***************** Set view
   
   // ***************** Generator Init
   G.init();
   G.loadInfo();
- // G.setCenter(P(width/2, height/2, 0));
   randomSeed(10);
  
   F=P(); E=P(0,0,500);
@@ -130,38 +116,12 @@ void draw() {
 
   // -------------------------------------------------------- create control curves  ----------------------------------   
     stroke(black); noFill(); C0.showSamples();
-    
     stroke(blue);  mainC.showSamples();mainC.drawEdges(); 
-
-   // -------------------------------------------------------- create and show spines  ----------------------------------   
-//   S0=S0.makeFrom(C0,500).resampleDistance(sampleDistance);
-//   stroke(blue); noFill(); if(showSpine) S0.drawEdges(); 
-   
-   // -------------------------------------------------------- compute spine normals  ----------------------------------   
-
   
    // -------------------------------------------------------- show tube ----------------------------------   
    if(showTube) {   mainC.prepareSpine(0); mainC.showTube(10,4,10,orange); }
    
-   // -------------------------------------------------------- create and move mesh ----------------------------------   
- //  pt Q0=C.Pof(10); //fill(white); show(Q0,4);
-  // M.moveTo(Q0);
-  
-     // -------------------------------------------------------- show mesh ----------------------------------   
- //  if(showMesh) { fill(yellow); if(M.showEdges) stroke(white);  else noStroke(); M.showFront();} 
-   
-    // -------------------------- pick mesh corner ----------------------------------   
- //  if(pressed) if (keyPressed&&(key=='.')) M.pickc(Pick());
- 
- 
-     // -------------------------------------------------------- show mesh corner ----------------------------------   
-  // if(showMesh) { fill(red); noStroke(); M.showc();} 
- 
-    // -------------------------------------------------------- edit mesh  ----------------------------------   
- // if(pressed) {
- //    if (keyPressed&&(key=='x'||key=='z')) M.pickc(Pick()); // sets M.sc to the closest corner in M from the pick point
- //    if (keyPressed&&(key=='X'||key=='Z')) M.pickc(Pick()); // sets M.sc to the closest corner in M from the pick point
- //    }
+
  
   // -------------------------------------------------------- graphic picking on surface and view control ----------------------------------   
   if (keyPressed&&key==' ') T.set(Pick()); // sets point T on the surface where the mouse points. The camera will turn toward's it when the ';' key is released
@@ -185,10 +145,7 @@ void draw() {
   // -------------------------------------------------------- Disable z-buffer to display occluded silhouettes and other things ---------------------------------- 
   hint(DISABLE_DEPTH_TEST);  // show on top
   stroke(black); if(showControl) {C0.showSamples(2);}
-//  if(showMesh&&showSilhouette) {stroke(dbrown); M.drawSilhouettes(); }  // display silhouettes
-//  strokeWeight(2); stroke(red);if(showMesh&&showNMBE) M.showMBEs();  // manifold borders
   camera(); // 2D view to write help text
-  //writeFooterHelp();
   hint(ENABLE_DEPTH_TEST); // show silouettes
 
   // -------------------------------------------------------- SNAP PICTURE ---------------------------------- 
@@ -212,12 +169,9 @@ void mouseDragged() {
   if(keyPressed&&key=='x') {C0.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
   if(keyPressed&&key=='b') {C0.dragAll( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); redrawMainCurve();} // move selected vertex of curve C in screen plane
   if(keyPressed&&key=='v') {C0.dragAll( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); redrawMainCurve() ;} // move selected vertex of curve Cb in XZ
- // if(keyPressed&&key=='x') {M.add(float(mouseX-pmouseX),I).add(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
-//  if(keyPressed&&key=='z') {M.add(float(mouseX-pmouseX),I).add(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane
-//  if(keyPressed&&key=='X') {M.addROI(float(mouseX-pmouseX),I).addROI(-float(mouseY-pmouseY),J); M.normals();} // move selected vertex in screen plane
-//  if(keyPressed&&key=='Z') {M.addROI(float(mouseX-pmouseX),I).addROI(float(mouseY-pmouseY),K); M.normals();}  // move selected vertex in X/Z screen plane 
-    if(keyPressed&&key=='m') {G.dragCenter( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  } // move Generator in screen plane
-    if(keyPressed&&key=='n') {G.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move Generator  in screen plane 
+
+  if(keyPressed&&key=='m') {G.dragCenter( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  } // move Generator in screen plane
+  if(keyPressed&&key=='n') {G.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move Generator  in screen plane 
   
   // geneator related
   if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX));} // adjust generator size
@@ -243,15 +197,12 @@ void keyPressed() {
   if(key=='c') {} // load curve
   if(key=='d') {} 
   if(key=='e') {}
- // if(key=='f') {filterFrenetNormal=!filterFrenetNormal; if(filterFrenetNormal) println("Filtering"); else println("not filtering");}
- // if(key=='g') {} // change global twist w (mouseDrag)
   if(key=='h') {} // hide picked vertex (mousePressed)
   if(key=='i') {}
   if(key=='j') {}
-  if(key=='k') {G.renderNewParticle().renderNewParticle(); G.p[0].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+10); G.p[1].setPosition(mainC.P[0].x,mainC.P[0].y,mainC.P[0].z+60);}
+
   if(key=='l') {}
- // if(key=='m') {showMesh=!showMesh;}
- // if(key=='n') {showNMBE=!showNMBE;}
+
   if(key=='o') {}
   if(key=='p') {}
   if(key=='q') {}
@@ -265,11 +216,11 @@ void keyPressed() {
   if(key=='y') {}
   if(key=='z') {} // drag mesh vertex in xz (mouseDragged)
    
-//  if(key=='A') {C.savePts();}
+
   if(key=='B') {}
-//  if(key=='C') {C.loadPts();} // save curve
+
   if(key=='D') {} //move in depth without rotation (draw)
-  //if(key=='E') {M.smoothen(); M.normals();}
+
   if(key=='F') {}
   if(key=='G') {}
   if(key=='H') {}
@@ -287,9 +238,9 @@ void keyPressed() {
   if(key=='T') {}
   if(key=='U') {}
   if(key=='V') {} 
- // if(key=='W') {M.saveMeshVTS();}
+ 
   if(key=='X') {} // drag mesh vertex in xy and neighbors (mouseDragged)
-//  if(key=='Y') {M.refine(); M.makeAllVisible();}
+
   if(key=='Z') {} // drag mesh vertex in xz and neighbors (mouseDragged)
 
   //if(key=='`') {M.perturb();}
@@ -297,21 +248,17 @@ void keyPressed() {
   if(key=='!') {snapping=true;}
   if(key=='@') {}
   if(key=='#') {}
-//  if(key=='$') {M.moveTo(C.Pof(10));} // ???????
+
   if(key=='%') {}
   if(key=='&') {}
   if(key=='*') {sampleDistance*=2;}
   if(key=='(') {}
   if(key==')') {showSilhouette=!showSilhouette;}
-  //if(key=='_') {M.flatShading=!M.flatShading;}
-//  if(key=='+') {M.flip();} // flip edge of M
-//  if(key=='-') {M.showEdges=!M.showEdges;}
- // if(key=='=') {C.P[5].set(C.P[0]); C.P[6].set(C.P[1]); C.P[7].set(C.P[2]); C.P[8].set(C.P[3]); C.P[9].set(C.P[4]);}
+
   if(key=='{') {showFrenetQuads=!showFrenetQuads;}
   if(key=='}') {}
   if(key=='|') {}
-//  if(key=='[') {initView(); F.set(M.Cbox); E.set(P(F,M.rbox*2,K));}
- // if(key==']') {F.set(M.Cbox);}
+
   if(key==':') {translucent=!translucent;}
   if(key==';') {showControl=!showControl;}
   if(key=='<') {}
@@ -321,10 +268,9 @@ void keyPressed() {
   if(key==',') {}
   if(key=='^') {} 
   if(key=='/') {} 
-  //if(key==' ') {} // pick focus point (will be centered) (draw & keyReleased)
 
-  if(key=='0') {w=0;}
-//  for(int i=0; i<10; i++) if (key==char(i+48)) vis[i]=!vis[i];
+
+
   
   } //------------------------------------------------------------------------ end keyPressed
 
