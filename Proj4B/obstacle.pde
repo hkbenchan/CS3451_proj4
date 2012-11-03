@@ -3,7 +3,7 @@
 class obstacle {
   PImage earthImage ;//= loadImage("data/world32k.jpg");
   pt pos = new pt(0,0,0);
-  float radius = 15;
+  float radius = 60;
   float x = width/2, y = height/2, z = 0;
   int sDetail = 13;
   
@@ -23,7 +23,7 @@ class obstacle {
   
   
   obstacle() {};
-  obstacle init() { initializeSphere(this.sDetail); return this; }
+  obstacle init() { initializeSphere(this.sDetail); this.resize(this.radius); return this; }
   
   obstacle setCenter(pt C) {
      this.pos.set(C);
@@ -69,7 +69,7 @@ class obstacle {
   
   obstacle gTexture(float r, PImage t) {
     int v1,v11,v2;
-    r = (r + 240 ) * 0.33;
+    //r = (r + 240 ) * 0.33;
     beginShape(TRIANGLE_STRIP);
     texture(t);
     float iu=(float)(t.width-1)/(this.sDetail);
@@ -120,6 +120,8 @@ class obstacle {
     }
     vertex(sphereX[voff]*r, sphereY[voff]*r, sphereZ[voff]*r, u, v);
     endShape();
+    
+    
     
     return this; 
   }

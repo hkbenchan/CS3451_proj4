@@ -175,7 +175,10 @@ void draw() {
   if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
   
   collisionTracker cT2 = obstacleCollisionTest();
-  if (cT2.next_ct <= TT)
+  
+  // collision happens here
+  
+  if (cT2.next_ct <= TT) 
     println("collision Time: "+cT2.next_ct+" id: "+cT2.A);
   
   // generator animate
@@ -230,7 +233,7 @@ void mouseDragged() {
   if(keyPressed && key=='G') {G.emit_rate += float(int(mouseX-pmouseX))/10; if (G.emit_rate<=0) { G.emit_rate = 0; } if (G.emit_rate>=20) {G.emit_rate = 20; } }
   
   // obstacle related
-  if (keyPressed && key=='e') {O.resize(O.radius+float(mouseX-pmouseX)); } // adjust the obstacle size
+  if (keyPressed && key=='e') {O.resize(O.radius+float(mouseX-pmouseX)); if (O.radius <=1) { O.resize(1); } } // adjust the obstacle size
     if(keyPressed&&key=='o') {O.dragCenter( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) );  } // move obstacle in screen plane
   if(keyPressed&&key=='O') {O.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move obstacle in screen plane 
   
