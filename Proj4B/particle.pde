@@ -22,7 +22,7 @@ class particle {
     fill(green);
     pushMatrix();
     translate(this.pos.x, this.pos.y, this.pos.z);
-    sphereDetail(10);
+    sphereDetail(5);
     sphere(this.radius);
     popMatrix();
     return this;
@@ -32,47 +32,4 @@ class particle {
     
     return this;
   }
-}
-
-
-float next_collision_time() {
-  float time = 1<<31-1; // Infinite time  
-  int a = -1, b = -1;
-  for (int i=0; i<G.max_p-1;i++) {
-     if (G.display[i]) {
-       for (int j=i+1; j<G.max_p; j++) {
-         if (G.display[j]) {
-           float s1,s2;
-           particle A = G.p[i], B = G.p[j];
-           vec U = A.velocity, V = B.velocity, UV = M(V,U), AB = V(A.pos,B.pos);
-           float tot_r = A.radius + B.radius;
-           float q_A = n2(UV), q_B = 2*d(AB,UV), q_C = n2(AB)-pow(tot_r,2);
-           float delta = pow(q_B,2)- 4*q_A*q_C;
-           if (delta<0) break;
-           if (abs(q_C) <0.00000001) {
-             s1 = 0; s2 = -q_A/q_B;
-           } else {
-             s1 = (-q_B+sqrt(delta))/2*q_C; s2 =  (-q_B-sqrt(delta))/2*q_C;
-           }
-           
-           if (0<s1 && s1<time) { 
-             time = s1;
-             a = i;
-             b = j;
-           }
-           if (0<s2 && s2<time) { 
-             time = s2;
-             a = i;
-             b = j;
-           }
-           
-         }
-       }
-     } 
-  }
-  if (a!=-1)
-    collision[0] = a;
-  if (b!=-1)
-    collision[1] = b;
-  return time;
 }

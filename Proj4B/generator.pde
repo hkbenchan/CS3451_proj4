@@ -8,7 +8,7 @@ class generator {
   int max_p = 1024;
   int active_p = 0;
   int sDetail = 10;
-  float emit_rate = 10; // 1 particle per second
+  float emit_rate = 5; // 5 particles per second
   particle p[] = new particle[max_p];
   LinkedList queue = new LinkedList(); // for recycle particles
   boolean display[] = new boolean[max_p]; // for checking display condition

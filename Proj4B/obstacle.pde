@@ -2,7 +2,7 @@
 
 class obstacle {
   PImage earthImage ;//= loadImage("data/world32k.jpg");
-  pt center = new pt(0,0,0);
+  pt pos = new pt(0,0,0);
   float radius = 20;
   float x = width/2, y = height/2, z = 0;
   int sDetail = 13;
@@ -26,7 +26,7 @@ class obstacle {
   obstacle init() { initializeSphere(this.sDetail); return this; }
   
   obstacle setCenter(pt C) {
-     this.center.set(C);
+     this.pos.set(C);
      return this;
   }
   
@@ -38,7 +38,7 @@ class obstacle {
   obstacle display() {
     sphereDetail(this.sDetail);
     pushMatrix();
-    translate(this.center.x,this.center.y,this.center.z);
+    translate(this.pos.x,this.pos.y,this.pos.z);
     pushMatrix();
     noFill();
     stroke(255,200);
@@ -63,7 +63,7 @@ class obstacle {
   }
   
   obstacle dragCenter(vec V) {
-    this.center.set(P(this.center, V));
+    this.pos.set(P(this.pos, V));
     return this; 
   }
   
@@ -169,4 +169,5 @@ class obstacle {
     }
     this.sDetail = res;
   }
+    
 }

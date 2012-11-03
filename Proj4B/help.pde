@@ -1,10 +1,22 @@
 void writeHelp () {fill(dblue);
     int i=0;
-    scribe("3D VIEWER 2012 (Jarek Rossignac)",i++);
-    scribe("CURVE t:show, s:move XY, a:move XZ , v:move all XY, b:move all XZ, A;archive, C.load",i++);
-    scribe("MESH L:load, .:pick corner, Y:subdivide, E:smoothen, W:write, N:next, S.swing ",i++);
-    scribe("VIEW space:pick focus, [:reset, ;:on mouse, E:save, e:restore ",i++);
-    scribe("SHOW ):silhouette, B:backfaces, |:normals, -:edges, c:curvature, g:Gouraud/flat, =:translucent",i++);
+    scribe("Project 4A, 3D velocity field curve and particle simulation",i++);
+    scribe("                   ",i++);
+    scribe("VELOCITY FIELD CURVE: ",i++);
+    scribe("t: show tube, x: move selected point XY, z: move selected point XZ ",i++);
+    scribe("v: move all XY, b: move all XZ, S: save, L: load ",i++);
+    scribe("i: insert control point, c: delete control point, a: append control point",i++);
+    scribe("                   ",i++);
+    scribe("PARTICLE GENERATOR: ",i++);
+    scribe("pressed G and mouse drag left/ right: change emission rate",i++);
+    scribe("pressed g and mouse drag left/ right: change size of the generator,  n:move XY, m:move XZ",i++);
+    scribe("pressed , and mouse click on a point: move the generator to that point instantly",i++);
+    scribe("                   ",i++);
+    scribe("OTHER PARAMETERS: ",i++);
+    scribe("f: add dynamic, pressed s and mouse drag left/ right: change blend parameter ",i++);
+    scribe("D: Moves E forward/backward (enlarge), d: Moves E forward/backward and rotates around (F,Y) ",i++);
+    scribe("Mouse Drag only: rotating the view point, Q: quit",i++);
+   // scribe("SHOW ):silhouette, B:backfaces, |:normals, -:edges, c:curvature, g:Gouraud/flat, =:translucent",i++);
     scribe("",i++);
 
    }
@@ -21,3 +33,4 @@ void scribeAt(String S, int x, int y) {text(S,x,y);} // writes on screen pixels 
 void scribe(String S, float x, float y) {text(S,x,y);} // writes at (x,y)
 void scribe(String S, float x, float y, color c) {fill(c); text(S,x,y); noFill();}
 ;
+
