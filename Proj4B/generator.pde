@@ -122,19 +122,19 @@ class generator {
           //newVel=U(newVel);
           float decayRatio=0;
           if(distanceParticileClosestC<310)
-             decayRatio=sq(cos(distanceParticileClosestC*PI/300));//cosine square decay function,  decay according to distance from 0 to 300
-        
+             decayRatio=sq(cos(distanceParticileClosestC*PI/300))*0.99 + 0.01;//cosine square decay function,  decay according to distance from 0 to 300
+          else decayRatio = 0.01;
           newVel=V(decayRatio,newVel);
           if (addDynamic){
                 if(p[i].closestPos==0)
-                       p[i].setVelocity(newVel.x,newVel.y,newVel.z);
+                       p[i].setVelocity(newVel);
                 else{
                        p[i].setVelocity(average(newVel,p[i].velocity,dynamicBlendParameter));
                 }
             
           }else{
                   
-                  p[i].setVelocity(newVel.x,newVel.y,newVel.z);
+                  p[i].setVelocity(newVel);
                  
           }
        }

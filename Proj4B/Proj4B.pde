@@ -14,7 +14,7 @@ GLU glu;
 
 // ****************************** GLOBAL VARIABLES FOR DISPLAY OPTIONS *********************************
 Boolean 
-  addDynamic=false,
+  addDynamic=true,
   showMesh=false,
   translucent=false,   
   showSilhouette=false, 
@@ -57,7 +57,8 @@ pt sE = P(), sF = P(); vec sU=V(); //  view parameters (saved with 'j'
 
 // *******************************************************************************************************************    SETUP
 void setup() {
-  size(1200, 700, OPENGL);  
+  size(1200, 700, OPENGL);
+  //frameRate(5);
   setColors(); sphereDetail(6); 
   PFont font = loadFont("GillSans-24.vlw"); textFont(font, 20);  // font for writing labels on //  PFont font = loadFont("Courier-14.vlw"); textFont(font, 12); 
   // ***************** OpenGL and View setup
@@ -121,7 +122,7 @@ void draw() {
      if (keyPressed&&(key=='z'||key=='x'||key=='c'||key=='a'||key=='i'||key==',')) {
        fill(white,0); noStroke(); if(showControl) C0.showSamples(20);
        C0.pick(Pick());
-        println(Pick().x+" "+Pick().y+" "+Pick().z);
+       //println(Pick().x+" "+Pick().y+" "+Pick().z);
        if(key=='c') { C0.delete();  G.resetQueue();redrawMainCurve();} //delete selected pt
        if(key=='a') { C0.append(Pick());   G.resetQueue();redrawMainCurve();}// C0.append(Pick());} //append pt at the end
        if(key=='i') { C0.insert();  G.resetQueue();redrawMainCurve();} // insert control pt
@@ -191,12 +192,21 @@ void draw() {
      //G.removeParticle(cT.A);
      
      if (cT.obstacle_involved){
+       // check if the particle is leaving the obstacle, false if vec from center of particle to center of obstacle is 'married' with veclocity of particle
+       if (d(V(G.p[cT.A].pos,O.pos), G.p[cT.A].velocity) >0) {
          println(G.p[cT.A].velocity.x+" "+G.p[cT.A].velocity.y+" "+G.p[cT.A].velocity.z);
          vec N=U(G.p[cT.A].pos,O.pos);
          vec U1=V(d(G.p[cT.A].velocity,N),N);
          G.p[cT.A].setVelocity(V(G.p[cT.A].velocity,-2,U1));
+         G.p[cT.A].setVelocity(V(2,G.p[cT.A].velocity));
          println("in");
+       }
+       else {
+         println("out"); 
+       }
      }else{
+       println("particle collision");
+       G.removeParticle(cT.A).removeParticle(cT.B);
      } 
      
      TT -= cT.next_ct;
