@@ -222,11 +222,12 @@ void draw() {
       }
      }else{ 
       
-        
+       
               if(cT.next_ct<0.00001){
                 G.updateParticles(0.00001);
              }else
                 G.updateParticles(cT.next_ct);
+           
              println("particle collision");
              vec N=U(G.p[cT.A].pos,G.p[cT.B].pos);
              vec U1=V(d(G.p[cT.A].velocity,N),N);
