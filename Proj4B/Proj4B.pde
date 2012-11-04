@@ -197,7 +197,7 @@ void draw() {
        // check if the particle is leaving the obstacle, false if vec from center of particle to center of obstacle is 'married' with veclocity of particle
       if (d(V(G.p[cT.A].pos,O.pos), G.p[cT.A].velocity) >0) {
          G.updateParticles(cT.next_ct);
-         println(G.p[cT.A].velocity.x+" "+G.p[cT.A].velocity.y+" "+G.p[cT.A].velocity.z);
+        // println(G.p[cT.A].velocity.x+" "+G.p[cT.A].velocity.y+" "+G.p[cT.A].velocity.z);
          vec N=U(G.p[cT.A].pos,O.pos);
          vec U1=V(d(G.p[cT.A].velocity,N),N);
          G.p[cT.A].setVelocity(A(G.p[cT.A].velocity,-2,U1));
@@ -206,15 +206,29 @@ void draw() {
        }
       else {
         if(cT.next_ct<0.00001){
-           G.updateParticles(0.00001);}else
+           G.updateParticles(0.00001);
+         }else
            G.updateParticles(cT.next_ct);
-        vec N=U(G.p[cT.A].pos,O.pos);
-        println("out"+cT.next_ct+"  "+angle(G.p[cT.A].velocity,N)); 
+       // vec N=U(G.p[cT.A].pos,O.pos);
+    //   println("out"+cT.next_ct+"  "+angle(G.p[cT.A].velocity,N)); 
      
       }
-     }else{
-       println("particle collision");
+     }else{ 
+      
+        
+              if(cT.next_ct<0.00001){
+                G.updateParticles(0.00001);
+             }else
+                G.updateParticles(cT.next_ct);
+             println("particle collision");
+             vec N=U(G.p[cT.A].pos,G.p[cT.B].pos);
+             vec U1=V(d(G.p[cT.A].velocity,N),N);
+             vec U2=V(d(G.p[cT.B].velocity,N),N);
+             G.p[cT.A].setVelocity(A(A(G.p[cT.A].velocity,-1,U1),1,U2));
+             G.p[cT.B].setVelocity(A(A(G.p[cT.B].velocity,-1,U2),1,U1));
        
+            
+      
        
        
      //  G.removeParticle(cT.A).removeParticle(cT.B);
