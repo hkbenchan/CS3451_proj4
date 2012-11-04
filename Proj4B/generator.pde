@@ -104,8 +104,8 @@ class generator {
         if (display[i]) {
           //findClosestPtC(P(p[i].pos));
           if (p[i].closestPos == mainC.n-1) { removeParticle(i); continue; }
-          stroke(black);
-          show(P(p[i].pos),mainC.P[p[i].closestPos]);
+       //   stroke(black);
+       //   show(P(p[i].pos),mainC.P[p[i].closestPos]);
           vec newVel;
           if(d(P(p[i].pos), mainC.P[p[i].closestPos+1])<d(P(p[i].pos), mainC.P[p[i].closestPos]))
           {

@@ -25,7 +25,7 @@ collisionTracker particleCollisionTest() {
              float q_A = n2(UV), q_B = 2*d(AB,UV), q_C = n2(AB)-pow(tot_r,2);
              float delta = pow(q_B,2)- 4*q_A*q_C;
              if (delta<0) continue;
-             if (abs(q_C) <0.0000000000000001) {
+             if (abs(q_C) <0.0000000001) {
                s1 = 0; s2 = -q_B/q_A;
              } else {
                s1 = (-q_B+sqrt(delta))/(2*q_A); s2 =  (-q_B-sqrt(delta))/(2*q_A);
