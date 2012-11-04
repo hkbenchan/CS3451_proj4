@@ -15,6 +15,7 @@ GLU glu;
 // ****************************** GLOBAL VARIABLES FOR DISPLAY OPTIONS *********************************
 Boolean 
   addDynamic=true,
+  addGravity=false,
   showMesh=false,
   translucent=false,   
   showSilhouette=false, 
@@ -33,7 +34,7 @@ float t=0, f=0, emit_timer = 0, STANDARD_TIMER = 0.01;
 generator G = new generator();
 obstacle O = new obstacle();
 float dynamicBlendParameter=.5;
-float gravitionalParameter=5;
+float gravitationalParameter=10000;
 float TT;
 
 // String SCC = "-"; // info on current corner
@@ -105,12 +106,18 @@ void draw() {
   fill(black);
   camera();
   specular(0,0,0); shininess(0);
-  text("Emission rate: "+(int)G.emit_rate,10,40);
-  text("Press ?: HELP ",10,60);
   if (addDynamic)
      text("Add Dynamic: Yes ; Blend Parameter: "+dynamicBlendParameter,10,20);
   else
      text("Add Dynamic: No",10,20);
+  text("Emission rate: "+(int)G.emit_rate,10,40);
+  text("Press ?: HELP ",10,60);
+  if (addGravity)
+     text("Add Gravity: Yes; Gravitational constant: "+gravitationalParameter,10,80);
+  else
+     text("Add Gravity: No",10, 80);
+  text("No. of particles: "+G.active_p,width-200,20);
+  text("FPS: "+frameRate, width-200,40);
   
   // -------------------------------------------------------- 3D display : set up view ----------------------------------
   camera(E.x, E.y, E.z, F.x, F.y, F.z, U.x, U.y, U.z); // defines the view : eye, ctr, up
@@ -286,7 +293,7 @@ void mouseDragged() {
     if(keyPressed&&key=='n') {G.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move Generator  in screen plane 
   
   // geneator related
-  if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX));} // adjust generator size
+  if(keyPressed && key=='g') {G.resize(G.radius+float(mouseX-pmouseX)); if (G.radius <= 1) {G.resize(1);} } // adjust generator size
   if(keyPressed && key=='G') {G.emit_rate += float(int(mouseX-pmouseX))/10; if (G.emit_rate<=0) { G.emit_rate = 0; } if (G.emit_rate>=20) {G.emit_rate = 20; } }
   
   // obstacle related
@@ -295,6 +302,11 @@ void mouseDragged() {
   if(keyPressed&&key=='O') {O.dragCenter( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) );} // move obstacle in screen plane 
   
   if(keyPressed && key=='s') {dynamicBlendParameter+=float(mouseX-pmouseX)/1000 ;if(dynamicBlendParameter>=1) dynamicBlendParameter=1; if(dynamicBlendParameter<=0) dynamicBlendParameter=0;}//ajust blend parameter
+  if(keyPressed && key=='U') {
+    gravitationalParameter+=float(mouseX-pmouseX);
+    if(gravitationalParameter>=50000) gravitationalParameter=50000;
+    if(gravitationalParameter<=0) gravitationalParameter=0;
+  }//ajust gravitational parameter
   
 }
 
@@ -329,7 +341,7 @@ void keyPressed() {
   if(key=='r') {}
   if(key=='s') {} // drag curve control point in xz (mouseDragged)
   if(key=='t') {showTube=!showTube;}
-  if(key=='u') {}
+  if(key=='u') { addGravity = !addGravity; }
   if(key=='v') {} // move S2
   if(key=='w') {}
   if(key=='x') {} // drag mesh vertex in xy (mouseDragged)

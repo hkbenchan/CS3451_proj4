@@ -104,8 +104,8 @@ class generator {
         if (display[i]) {
           //findClosestPtC(P(p[i].pos));
           if (p[i].closestPos == mainC.n-1) { removeParticle(i); continue; }
-          stroke(black);
-          show(P(p[i].pos),mainC.P[p[i].closestPos]);
+       //   stroke(black);
+       //   show(P(p[i].pos),mainC.P[p[i].closestPos]);
           vec newVel;
           if(d(P(p[i].pos), mainC.P[p[i].closestPos+1])<d(P(p[i].pos), mainC.P[p[i].closestPos]))
           {
@@ -125,6 +125,8 @@ class generator {
              decayRatio=sq(cos(distanceParticileClosestC*PI/300))*0.99 + 0.01;//cosine square decay function,  decay according to distance from 0 to 300
           else decayRatio = 0.01;
           newVel=V(decayRatio,newVel);
+          
+          
           if (addDynamic){
                 if(p[i].closestPos==0)
                        p[i].setVelocity(newVel);
@@ -134,9 +136,17 @@ class generator {
             
           }else{
                   
-                  p[i].setVelocity(newVel);
-                 
+                  p[i].setVelocity(newVel);      
           }
+          
+          // gravitational force by the obstacle
+          
+          if (addGravity) {
+            vec op_vec = V(p[i].pos, O.pos);
+            float coeff = gravitationalParameter/n2(op_vec);s
+            p[i].setVelocity(A(p[i].velocity,1,V(coeff,U(op_vec))));
+          }
+          
        }
        
     } 
