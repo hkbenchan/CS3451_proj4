@@ -33,6 +33,7 @@ float t=0, f=0, emit_timer = 0, STANDARD_TIMER = 0.01;
 generator G = new generator();
 obstacle O = new obstacle();
 float dynamicBlendParameter=.5;
+float gravitionalParameter=5;
 float TT;
 
 // String SCC = "-"; // info on current corner
