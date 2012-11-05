@@ -143,7 +143,7 @@ class generator {
           
           if (addGravity) {
             vec op_vec = V(p[i].pos, O.pos);
-            float coeff = gravitationalParameter/n2(op_vec);s
+            float coeff = gravitationalParameter/n2(op_vec);
             p[i].setVelocity(A(p[i].velocity,1,V(coeff,U(op_vec))));
           }
           
