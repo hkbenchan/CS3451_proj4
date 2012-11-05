@@ -122,8 +122,8 @@ class generator {
           //newVel=U(newVel);
           float decayRatio=0;
           if(distanceParticileClosestC<310)
-             decayRatio=sq(cos(distanceParticileClosestC*PI/300));//cosine square decay function,  decay according to distance from 0 to 300
-        
+             //cosine square decay function,  decay according to distance from 0 to 300
+             decayRatio=sq(cos(distanceParticileClosestC*PI/300));
           newVel=V(decayRatio,newVel);
           if (addDynamic){
                 if(p[i].closestPos==0)
