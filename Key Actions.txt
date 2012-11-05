@@ -1,0 +1,25 @@
+Project 4, 3D velocity field curve and particle simulation
+
+VELOCITY FIELD CURVE:
+t: show tube, x: move selected point XY, z: move selected point XZ
+v: move all XY, b: move all XZ, S: save, L: load 
+i: insert control point, c: delete control point, a: append control point
+
+
+PARTICLE GENERATOR:
+pressed G and mouse drag left/ right: change emission rate
+pressed g and mouse drag left/ right: change size of the generator,  n:move XY, m:move XZ
+pressed , and mouse click on a point: move the generator to that point instantly
+
+OBSTACLE (earth): 
+press e and mouse drag left/ right: change size of obstacle
+O: move XY, o: move XZ
+
+GRAVITY: 
+u: turn on gravity effect 
+pressed U and mouse drag left/ right: change the strength of the gravitational force (set gravity const)
+
+OTHER PARAMETERS:
+f: add dynamic, pressed s and mouse drag left/ right: change blend parameter
+D: Moves E forward/backward (enlarge), d: Moves E forward/backward and rotates around (F,Y) 
+Mouse Drag only: rotating the view point, Q: quit
