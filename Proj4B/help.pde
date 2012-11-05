@@ -1,7 +1,6 @@
 void writeHelp () {fill(dblue);
     int i=0;
     scribe("Project 4B, 3D velocity field curve and particle simulation",i++);
-    scribe("                   ",i++);
     scribe("VELOCITY FIELD CURVE: ",i++);
     scribe("t: show tube, x: move selected point XY, z: move selected point XZ ",i++);
     scribe("v: move all XY, b: move all XZ, S: save, L: load ",i++);
