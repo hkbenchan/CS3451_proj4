@@ -79,10 +79,11 @@ void setup() {
   // ***************** Generator Init
   G.init();
   G.loadInfo();
+  
  // G.setCenter(P(width/2, height/2, 0));
   randomSeed(10);
  
-  O.init().setCenter(C0.Pof(1));
+  O.init().loadInfo();
   
   F=P(); E=P(0,0,500);
   for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
@@ -360,14 +361,14 @@ void keyPressed() {
   if(key=='I') {}
   if(key=='J') {}
   if(key=='K') {}
-  if(key=='L') {C0.loadPts();G.loadInfo();redrawMainCurve();}
+  if(key=='L') {C0.loadPts();G.loadInfo(); O.loadInfo();redrawMainCurve();}
   if(key=='M') {}
  // if(key=='N') {M.next();}
   if(key=='O') {}
   if(key=='P') {}
   if(key=='Q') {exit();}
   if(key=='R') {}
-  if(key=='S') {C0.savePts();G.saveInfo();}
+  if(key=='S') {C0.savePts();G.saveInfo(); O.saveInfo();}
   if(key=='T') {}
   if(key=='U') {}
   if(key=='V') {} 

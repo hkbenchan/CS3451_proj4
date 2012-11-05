@@ -171,5 +171,29 @@ class obstacle {
     }
     this.sDetail = res;
   }
+  
+  
+  //save
+  
+  void saveInfo() {saveInfo("data/O.pts");}
+  void saveInfo(String fn) { String [] inppts = new String [2];
+    int s=0; inppts[s++]=str(1); 
+    inppts[s++]=str(pos.x)+","+str(pos.y)+","+str(pos.z);
+    saveStrings(fn,inppts);  };
+  void loadInfo() {loadInfo("data/O.pts");}
+  void loadInfo(String fn) { String [] ss = loadStrings(fn);
+    String subpts;
+    int s=0; int comma1, comma2; int n = int(ss[s]);
+    for(int i=0; i<n; i++) { 
+      String S =  ss[++s];
+      comma1=S.indexOf(',');
+      float x=float(S.substring(0, comma1));
+      String R = S.substring(comma1+1);
+      comma2=R.indexOf(',');      
+      float y=float(R.substring(0, comma2)); 
+      float z=float(R.substring(comma2+1));
+      pos= P(x,y,z);  
+      }; 
+    }
     
 }
