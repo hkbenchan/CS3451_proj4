@@ -67,7 +67,7 @@ void setup() {
   // ***************** Set view
  for(int i=0;i<10;i++) CC0[i]=new Curve();
   F=P(); E=P(0,0,500);
-  for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
+//  for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
  }
   
 // ******************************************************************************************************************* DRAW      
@@ -345,6 +345,12 @@ void BuildShape(){
     for(int i=0;i<10;i++){
       CC0[i].drawEdges();
     }
+  
+}
+
+void buildSurface(){
+   
+  
   
 }
  
