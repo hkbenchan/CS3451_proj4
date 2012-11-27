@@ -25,7 +25,9 @@ Boolean
   showHelpText=false; 
 
 // String SCC = "-"; // info on current corner
-   
+
+d_sphere DS = new d_sphere();
+
 // ****************************** VIEW PARAMETERS *******************************************************
 pt F = P(0,0,0); pt T = P(0,0,0); pt E = P(0,0,1000); vec U=V(0,1,0);  // focus  set with mouse when pressing ';', eye, and up vector
 pt Q=P(0,0,0); vec I=V(1,0,0); vec J=V(0,1,0); vec K=V(0,0,1); // picked surface point Q and screen aligned vectors {I,J,K} set when picked
@@ -68,6 +70,7 @@ void setup() {
  for(int i=0;i<10;i++) CC0[i]=new Curve();
   F=P(); E=P(0,0,500);
 //  for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
+ DS.init();
  }
   
 // ******************************************************************************************************************* DRAW      
@@ -102,6 +105,16 @@ void draw() {
   directionalLight(255,255,255,Li.x,Li.y,Li.z); // direction of light: behind and above the viewer
   specular(255,255,0); shininess(5);
   
+  //***************** display the directional sphere*****************************//
+  vec EF = V(E,F);
+  vec tmp = R(U,PI/2,I,J);
+  vec REF = R(U(EF),-PI/2,U(EF), N(U,U(EF)));
+  DS.setCenter(P(E, A(V(250,U(EF)),A(V(150,REF), V(-100,U))))).displayG();
+  
+//  println("EF: "+EF.x+" "+EF.y+" "+EF.z);
+//  println("REF: "+REF.x+" "+REF.y+" "+REF.z);
+
+  //***************** END of display the directional sphere*****************************//  
   
   noFill();
   BuildShape();
