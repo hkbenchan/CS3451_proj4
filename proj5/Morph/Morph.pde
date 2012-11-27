@@ -81,6 +81,7 @@ void draw() {
     fill(black); writeHelp();
     return;
     } */
+  noFill();
   stroke(green);
   C0.drawEdges() ;
   C0.showSamples();
@@ -102,7 +103,7 @@ void draw() {
   specular(255,255,0); shininess(5);
   
   
-
+  noFill();
   BuildShape();
   buildSurface();
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
@@ -176,10 +177,10 @@ Boolean pressed=false;
 
 void mousePressed() {pressed=true;
  if (keyPressed) {
-   if (key=='1' ) {  if(C0.n<1) C0.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C0.P[C0.n-1])>30 && C0.n<500) C0.addPt(new pt(mouseX,mouseY,0));}
-   if (key=='2' ) {  if(C1.n<1) C1.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C1.P[C1.n-1])>30 && C1.n<500) C1.addPt(new pt(mouseX,mouseY,0));}
-   if (key=='3' ) {  if(C2.n<1) C2.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C2.P[C2.n-1])>30 && C2.n<500) C2.addPt(new pt(mouseX,mouseY,0));}
-   if (key=='4' ) {  if(C3.n<1) C3.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C3.P[C3.n-1])>30 && C3.n<500) C3.addPt(new pt(mouseX,mouseY,0));}
+   if (key=='1' ) {  if(C0.n<1) C0.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C0.P[C0.n-1])>10 && C0.n<500) C0.addPt(new pt(mouseX,mouseY,0));}
+   if (key=='2' ) {  if(C1.n<1) C1.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C1.P[C1.n-1])>10 && C1.n<500) C1.addPt(new pt(mouseX,mouseY,0));}
+   if (key=='3' ) {  if(C2.n<1) C2.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C2.P[C2.n-1])>10 && C2.n<500) C2.addPt(new pt(mouseX,mouseY,0));}
+   if (key=='4' ) {  if(C3.n<1) C3.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C3.P[C3.n-1])>10 && C3.n<500) C3.addPt(new pt(mouseX,mouseY,0));}
    
    
  }
