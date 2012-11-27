@@ -94,6 +94,7 @@ void draw() {
   C3.drawEdges() ;
   C3.showSamples();
   
+  
   // -------------------------------------------------------- 3D display : set up view ----------------------------------
   camera(E.x, E.y, E.z, F.x, F.y, F.z, U.x, U.y, U.z); // defines the view : eye, ctr, up
   vec Li=U(A(V(E,F),0.1*d(E,F),J));   // vec Li=U(A(V(E,F),-d(E,F),J)); 
@@ -103,6 +104,7 @@ void draw() {
   
 
   BuildShape();
+  buildSurface();
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
  /*   if(pressed) {
      if (keyPressed&&(key=='a'||key=='s')) {
@@ -342,14 +344,26 @@ void BuildShape(){
       angle=(i+1)*2*PI/9.0;
     }
     
-    for(int i=0;i<10;i++){
-      CC0[i].drawEdges();
-    }
-  
 }
 
 void buildSurface(){
-   
+    fill(green);
+    for(int i=0;i<10;i++)
+    {
+      int j=i+1;
+      if(j>9) j=0;
+      for(int k=0;k<CC0[i].n-1;k++){
+        beginShape();
+        vertex(CC0[i].P[k]); 
+        vertex(CC0[i].P[k+1]); 
+        vertex(CC0[j].P[k+1]); 
+        vertex(CC0[j].P[k]); 
+        endShape();
+      }
+      
+      
+      
+    }
   
   
 }
