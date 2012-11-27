@@ -11,7 +11,7 @@ GLU glu;
 
 // ****************************** GLOBAL VARIABLES FOR DISPLAY OPTIONS *********************************
 Boolean 
-  showMesh=true,
+  showMesh=false,
   translucent=false,   
   showSilhouette=true, 
   showNMBE=true,
@@ -32,7 +32,7 @@ pt Q=P(0,0,0); vec I=V(1,0,0); vec J=V(0,1,0); vec K=V(0,0,1); // picked surface
 void initView() {Q=P(0,0,0); I=V(1,0,0); J=V(0,1,0); K=V(0,0,1); F = P(0,0,0); E = P(0,0,1000); U=V(0,1,0); } // declares the local frames
 
 // ******************************** MESHES ***********************************************
-Mesh M=new Mesh(); // meshes for models M0 and M1
+//Mesh M=new Mesh(); // meshes for models M0 and M1
 
 float volume1=0, volume0=0;
 float sampleDistance=1;
@@ -59,8 +59,8 @@ void setup() {
   initView(); // declares the local frames for 3D GUI
 
   // ***************** Load meshes
-  M.declareVectors().loadMeshVTS("data/horse.vts");
-  M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
+  //M.declareVectors().loadMeshVTS("data/horse.vts");
+ // M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
   // ***************** Load Curve
  // C.loadPts();
   
@@ -81,7 +81,6 @@ void draw() {
     fill(black); writeHelp();
     return;
     } */
- 
   stroke(green);
   C0.drawEdges() ;
   C0.showSamples();
@@ -94,13 +93,16 @@ void draw() {
   stroke(magenta);
   C3.drawEdges() ;
   C3.showSamples();
-  BuildShape();
+  
   // -------------------------------------------------------- 3D display : set up view ----------------------------------
   camera(E.x, E.y, E.z, F.x, F.y, F.z, U.x, U.y, U.z); // defines the view : eye, ctr, up
   vec Li=U(A(V(E,F),0.1*d(E,F),J));   // vec Li=U(A(V(E,F),-d(E,F),J)); 
   directionalLight(255,255,255,Li.x,Li.y,Li.z); // direction of light: behind and above the viewer
   specular(255,255,0); shininess(5);
   
+  
+
+  BuildShape();
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
  /*   if(pressed) {
      if (keyPressed&&(key=='a'||key=='s')) {
@@ -128,14 +130,14 @@ void draw() {
 //   M.moveTo(Q0);
   
      // -------------------------------------------------------- show mesh ----------------------------------   
-   if(showMesh) { fill(yellow); if(M.showEdges) stroke(white);  else noStroke(); M.showFront();} 
+  // if(showMesh) { fill(yellow); if(M.showEdges) stroke(white);  else noStroke(); M.showFront();} 
    
     // -------------------------- pick mesh corner ----------------------------------   
 //   if(pressed) if (keyPressed&&(key=='.')) M.pickc(Pick());
  
  
      // -------------------------------------------------------- show mesh corner ----------------------------------   
-   if(showMesh) { fill(red); noStroke(); M.showc();} 
+  // if(showMesh) { fill(red); noStroke(); M.showc();} 
  
     // -------------------------------------------------------- edit mesh  ----------------------------------   
   //if(pressed) {
@@ -314,20 +316,28 @@ void snapPicture() {saveFrame("PICTURES/P"+nf(pictureCounter++,3)+".jpg"); snapp
 
 
 void BuildShape(){
-    pt O=P(100,100,0);
+    pt O=P(0,0,0);
     vec I=V(1,0,0);
     vec J=V(0,1,0);
     vec K=V(0,0,1);
+    vec originalAxis=V(0,0,0);
+    if(C0.n>0){
+       originalAxis=V(C0.P[0],C0.P[C0.n-1]);
+    }
+    println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
     float angle=0;
     for(int i=0;i<10;i++){
-    
-      I=R(I,angle,I,K);
-        println(I.x+" "+I.y+" "+I.z);
+      vec axis;
+      axis=R(I,angle,I,J);
       CC0[i].n=C0.n;
       for(int j=0;j<C0.n;j++){
         pt newP=P();
         newP.set(O);
-        CC0[i].P[j]=newP.add(V(C0.P[j].x,I,C0.P[j].y,J));
+        float x= d(originalAxis,V(C0.P[0],C0.P[j]))/n(originalAxis);
+        println(d(C0.P[0],C0.P[j]));
+        float y=sqrt(d(C0.P[0],C0.P[j])*d(C0.P[0],C0.P[j])-x*x);
+     //   println(x+" "+y);
+        CC0[i].P[j]=newP.add(V(x,K,y,axis));
       }
       angle=(i+1)*2*PI/9.0;
     }
