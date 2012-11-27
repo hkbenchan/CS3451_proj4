@@ -3,7 +3,7 @@
 class d_sphere {
 
   pt center = new pt(0,0,0);
-  float radius = 20;
+  float radius = 30, small_radius = 10;
   float x = width/2, y = height/2, z = 0;
   int sDetail = 20;
   
@@ -24,10 +24,16 @@ class d_sphere {
   d_sphere displayG() {
     pushMatrix();
     fill(orange);
-    //lights();
     translate(this.center.x,this.center.y,this.center.z);
     sphereDetail(this.sDetail);
     sphere(this.radius);
+    // small sphere
+    pushMatrix();
+      fill(green);
+      translate(0,this.radius+this.small_radius,0);
+      sphere(this.small_radius);
+    popMatrix();
+    // end
     popMatrix();
     return this;
   }
