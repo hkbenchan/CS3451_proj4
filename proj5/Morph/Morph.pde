@@ -11,7 +11,7 @@ GLU glu;
 
 // ****************************** GLOBAL VARIABLES FOR DISPLAY OPTIONS *********************************
 Boolean 
-  showMesh=false,
+  showMesh=true,
   translucent=false,   
   showSilhouette=true, 
   showNMBE=true,
@@ -24,6 +24,7 @@ Boolean
   showTwistFreeNormal=false, 
   showHelpText=false; 
 
+int numRotation=10;
 // String SCC = "-"; // info on current corner
 
 d_sphere DS = new d_sphere();
@@ -36,16 +37,25 @@ void initView() {Q=P(0,0,0); I=V(1,0,0); J=V(0,1,0); K=V(0,0,1); F = P(0,0,0); E
 // ******************************** MESHES ***********************************************
 //Mesh M=new Mesh(); // meshes for models M0 and M1
 Mesh S0=new Mesh();//meshes for Soilid 1
+Mesh S1=new Mesh();//meshes for Soilid 2
+Mesh S2=new Mesh();//meshes for Soilid 3
+Mesh S3=new Mesh();//meshes for Soilid 4
 
 float volume1=0, volume0=0;
 float sampleDistance=1;
 // ******************************** CURVES & SPINES ***********************************************
 Curve C0=new Curve();
-Curve CC0[]=new Curve[10];
+Curve CC0[]=new Curve[100];
 
 Curve C1=new Curve();
+Curve CC1[]=new Curve[100];
+
 Curve C2=new Curve();
+Curve CC2[]=new Curve[100];
+
 Curve C3=new Curve();
+Curve CC3[]=new Curve[100];
+
 //Curve C0 = new Curve(5), S0 = new Curve(), C1 = new Curve(5), S1 = new Curve();  // control points and spines 0 and 1
 //Curve C= new Curve(11,130,P());
 //int nsteps=250; // number of smaples along spine
@@ -64,13 +74,27 @@ void setup() {
   // ***************** Load meshes
   S0.declareVectors();
   S0.resetMarkers().computeBox().updateON();
+  
+  S1.declareVectors();
+  S1.resetMarkers().computeBox().updateON();
+  
+  S2.declareVectors();
+  S2.resetMarkers().computeBox().updateON();
+  
+  S3.declareVectors();
+  S3.resetMarkers().computeBox().updateON();
   //M.declareVectors().loadMeshVTS("data/horse.vts");
  // M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
   // ***************** Load Curve
  // C.loadPts();
   
   // ***************** Set view
- for(int i=0;i<10;i++) CC0[i]=new Curve();
+  for(int i=0;i<numRotation;i++){
+     CC0[i]=new Curve();
+     CC1[i]=new Curve();
+     CC2[i]=new Curve();
+     CC3[i]=new Curve();
+ }
   F=P(); E=P(0,0,500);
 //  for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
  DS.init();
@@ -87,6 +111,13 @@ void draw() {
     fill(black); writeHelp();
     return;
     } */
+    
+  fill(black);
+  camera();
+  specular(0,0,0); shininess(0);
+  text("Number of sample (change by pressed s and mouse click): "+numRotation,10,20);
+  text("Press ?: HELP ",10,60);
+  
   noFill();
   stroke(green);
   C0.drawEdges() ;
@@ -123,7 +154,7 @@ void draw() {
   BuildShape();
  // buildSurface();
   
-  if(C0.n>2)  makeMesh();
+ if(showMesh)  makeMesh();
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
  /*   if(pressed) {
      if (keyPressed&&(key=='a'||key=='s')) {
@@ -152,7 +183,7 @@ void draw() {
   
      // -------------------------------------------------------- show mesh ----------------------------------   
   // if(showMesh) { fill(yellow); if(M.showEdges) stroke(white);  else noStroke(); M.showFront();} 
-   fill(yellow); stroke(white); S0.showFront();
+   
     // -------------------------- pick mesh corner ----------------------------------   
 //   if(pressed) if (keyPressed&&(key=='.')) M.pickc(Pick());
  
@@ -209,19 +240,59 @@ void mousePressed() {pressed=true;
   
    }
    
-   
-   
-   if (key=='2' ) {  if(C1.n<1) C1.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C1.P[C1.n-1])>10 && C1.n<500) C1.addPt(new pt(mouseX,mouseY,0));}
-   if (key=='3' ) {  if(C2.n<1) C2.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C2.P[C2.n-1])>10 && C2.n<500) C2.addPt(new pt(mouseX,mouseY,0));}
-   if (key=='4' ) {  if(C3.n<1) C3.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C3.P[C3.n-1])>10 && C3.n<500) C3.addPt(new pt(mouseX,mouseY,0));}
+   if (key=='2' ) { 
+        boolean validTurn=false;
+       if(C1.n>=3){
+           float det1=(C1.P[C1.n-2].x-C1.P[C1.n-3].x)*(-(C1.P[C1.n-1].y-C1.P[C1.n-2].y))+(C1.P[C1.n-2].y-C1.P[C1.n-3].y)*(C1.P[C1.n-1].x-C1.P[C1.n-2].x);
+           float det2=(C1.P[C1.n-1].x-C1.P[C1.n-2].x)*(-(mouseY-C1.P[C1.n-1].y))+(C1.P[C1.n-1].y-C1.P[C1.n-2].y)*(mouseX-C1.P[C1.n-1].x);
+           if((det1>0&&det2>0)||(det1<0&&det2<0)) validTurn=true;
+         
+       }else
+          validTurn=true;
+       if(C1.n<1) C1.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C1.P[C1.n-1])>10 && C1.n<500 && validTurn) C1.addPt(new pt(mouseX,mouseY,0));
+   }
+   if (key=='3' ) {
+          boolean validTurn=false;
+         if(C2.n>=3){
+             float det1=(C2.P[C2.n-2].x-C2.P[C2.n-3].x)*(-(C2.P[C2.n-1].y-C2.P[C2.n-2].y))+(C2.P[C2.n-2].y-C2.P[C2.n-3].y)*(C2.P[C2.n-1].x-C2.P[C2.n-2].x);
+             float det2=(C2.P[C2.n-1].x-C2.P[C2.n-2].x)*(-(mouseY-C2.P[C2.n-1].y))+(C2.P[C2.n-1].y-C2.P[C2.n-2].y)*(mouseX-C2.P[C2.n-1].x);
+             if((det1>0&&det2>0)||(det1<0&&det2<0)) validTurn=true;
+           
+         }else
+          validTurn=true;
+       if(C2.n<1) C2.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C2.P[C2.n-1])>10 && C2.n<500 && validTurn) C2.addPt(new pt(mouseX,mouseY,0));
+     
+   }
+   if (key=='4' ) {  
+         boolean validTurn=false;
+         if(C3.n>=3){
+             float det1=(C3.P[C3.n-2].x-C3.P[C3.n-3].x)*(-(C3.P[C3.n-1].y-C3.P[C3.n-2].y))+(C3.P[C3.n-2].y-C3.P[C3.n-3].y)*(C3.P[C3.n-1].x-C3.P[C3.n-2].x);
+             float det2=(C3.P[C3.n-1].x-C3.P[C3.n-2].x)*(-(mouseY-C3.P[C3.n-1].y))+(C3.P[C3.n-1].y-C3.P[C3.n-2].y)*(mouseX-C3.P[C3.n-1].x);
+             if((det1>0&&det2>0)||(det1<0&&det2<0)) validTurn=true;
+           
+         }else
+          validTurn=true;
+        if(C3.n<1) C3.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C3.P[C3.n-1])>10 && C3.n<500 && validTurn) C3.addPt(new pt(mouseX,mouseY,0));
+   }
    
    
  }
+  if (keyPressed && key=='s') {numRotation+=1; if (numRotation<=5) numRotation=5; if (numRotation>=50) numRotation=50;
+       for(int i=0;i<numRotation;i++){
+         CC0[i]=new Curve();
+         CC1[i]=new Curve();
+         CC2[i]=new Curve();
+         CC3[i]=new Curve();
+      }
+    }  
 
 
 }
-  
+
+
 void mouseDragged() {
+     
+  // adjust the obstacle size
 //  if(keyPressed&&key=='a') {C.dragPoint( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); } // move selected vertex of curve C in screen plane
 //  if(keyPressed&&key=='s') {C.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); } // move selected vertex of curve C in screen plane
 //  if(keyPressed&&key=='b') {C.dragAll(0,5, V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); } // move selected vertex of curve C in screen plane
@@ -234,6 +305,7 @@ void mouseDragged() {
 
 void mouseReleased() {
     U.set(M(J)); // reset camera up vector
+    
     }
   
 void keyReleased() {
@@ -357,12 +429,15 @@ void BuildShape(){
     vec J=V(0,1,0);
     vec K=V(0,0,1);
     vec originalAxis=V(0,0,0);
-    if(C0.n>0){
+    float angle=0;
+    
+    //C0
+    if(C0.n>1){
        originalAxis=V(C0.P[0],C0.P[C0.n-1]);
     }
     println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
-    float angle=0;
-    for(int i=0;i<10;i++){
+    angle=0;
+    for(int i=0;i<numRotation;i++){
       vec axis;
       axis=R(I,angle,I,J);
       CC0[i].n=C0.n;
@@ -375,17 +450,84 @@ void BuildShape(){
      //   println(x+" "+y);
         CC0[i].P[j]=newP.add(V(x,K,y,axis));
       }
-      angle=(i+1)*2*PI/9.0;
+      angle=(i+1)*2*PI/(numRotation-1);
+    }
+    
+    //C1
+    if(C1.n>1){
+       originalAxis=V(C1.P[0],C1.P[C1.n-1]);
+    }
+    println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
+    angle=0;
+    for(int i=0;i<numRotation;i++){
+      vec axis;
+      axis=R(I,angle,I,J);
+      CC1[i].n=C1.n;
+      for(int j=0;j<C1.n;j++){
+        pt newP=P();
+        newP.set(O);
+        float x= d(originalAxis,V(C1.P[0],C1.P[j]))/n(originalAxis);
+        println(d(C1.P[0],C1.P[j]));
+        float y=sqrt(d(C1.P[0],C1.P[j])*d(C1.P[0],C1.P[j])-x*x);
+     //   println(x+" "+y);
+        CC1[i].P[j]=newP.add(V(x,K,y,axis));
+      }
+      angle=(i+1)*2*PI/(numRotation-1);
+    }
+    
+     //C2
+    if(C2.n>1){
+       originalAxis=V(C2.P[0],C2.P[C2.n-1]);
+    }
+    println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
+    angle=0;
+    for(int i=0;i<numRotation;i++){
+      vec axis;
+      axis=R(I,angle,I,J);
+      CC2[i].n=C2.n;
+      for(int j=0;j<C2.n;j++){
+        pt newP=P();
+        newP.set(O);
+        float x= d(originalAxis,V(C2.P[0],C2.P[j]))/n(originalAxis);
+        println(d(C2.P[0],C2.P[j]));
+        float y=sqrt(d(C2.P[0],C2.P[j])*d(C2.P[0],C2.P[j])-x*x);
+     //   println(x+" "+y);
+        CC2[i].P[j]=newP.add(V(x,K,y,axis));
+      }
+      angle=(i+1)*2*PI/(numRotation-1);
+    }
+    
+     //C3
+    if(C3.n>1){
+       originalAxis=V(C3.P[0],C3.P[C3.n-1]);
+    }
+    println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
+    angle=0;
+    for(int i=0;i<numRotation;i++){
+      vec axis;
+      axis=R(I,angle,I,J);
+      CC3[i].n=C3.n;
+      for(int j=0;j<C3.n;j++){
+        pt newP=P();
+        newP.set(O);
+        float x= d(originalAxis,V(C3.P[0],C3.P[j]))/n(originalAxis);
+        println(d(C3.P[0],C3.P[j]));
+        float y=sqrt(d(C3.P[0],C3.P[j])*d(C3.P[0],C3.P[j])-x*x);
+     //   println(x+" "+y);
+        CC3[i].P[j]=newP.add(V(x,K,y,axis));
+      }
+      angle=(i+1)*2*PI/(numRotation-1);
     }
     
 }
 
 void buildSurface(){
-    fill(green);
-    for(int i=0;i<10;i++)
+  //C0
+    fill(green);stroke(black);
+    for(int i=0;i<numRotation;i++)
     {
       int j=i+1;
-      if(j>9) j=0;
+      if(j>numRotation-1) j=0;
       for(int k=0;k<CC0[i].n-1;k++){
         beginShape();
         vertex(CC0[i].P[k]); 
@@ -394,42 +536,192 @@ void buildSurface(){
         vertex(CC0[j].P[k]); 
         endShape();
       }
-      
-      
-      
     }
+    
+    //C1
+    fill(red);stroke(black);
+    for(int i=0;i<numRotation;i++)
+    {
+      int j=i+1;
+      if(j>numRotation-1) j=0;
+      for(int k=0;k<CC1[i].n-1;k++){
+        beginShape();
+        vertex(CC1[i].P[k]); 
+        vertex(CC1[i].P[k+1]); 
+        vertex(CC1[j].P[k+1]); 
+        vertex(CC1[j].P[k]); 
+        endShape();
+      }
+    }
+    
+    //C2
+    fill(cyan);stroke(black);
+    for(int i=0;i<numRotation;i++)
+    {
+      int j=i+1;
+      if(j>numRotation-1) j=0;
+      for(int k=0;k<CC2[i].n-1;k++){
+        beginShape();
+        vertex(CC2[i].P[k]); 
+        vertex(CC2[i].P[k+1]); 
+        vertex(CC2[j].P[k+1]); 
+        vertex(CC2[j].P[k]); 
+        endShape();
+      }
+    }
+    
+    //C3
+    fill(magenta);stroke(black);
+    for(int i=0;i<numRotation;i++)
+    {
+      int j=i+1;
+      if(j>numRotation-1) j=0;
+      for(int k=0;k<CC3[i].n-1;k++){
+        beginShape();
+        vertex(CC3[i].P[k]); 
+        vertex(CC3[i].P[k+1]); 
+        vertex(CC3[j].P[k+1]); 
+        vertex(CC3[j].P[k]); 
+        endShape();
+      }
+    }
+    
 }
 
 void makeMesh(){
   
-    S0.empty();
-
-    
-    S0.addVertex(CC0[0].P[0]);
-    S0.addVertex(CC0[0].P[C0.n-1]);
-    for(int i=0;i<10;i++)
-    {
-      int j=i+1;
-      if(j>9) j=0;
-       
-      for(int k=0;k<CC0[i].n-1;k++){
-      
-        if(k==0){
-          S0.addVertex(CC0[j].P[k+1]); 
-          S0.addVertex(CC0[i].P[k+1]);
-          S0.addTriangle(0,S0.nv-2,S0.nv-1);
-        }else if (k==CC0[i].n-2){
-          S0.addTriangle(S0.nv-1,S0.nv-2,1);
-        }else
-        {
-          S0.addVertex(CC0[j].P[k+1]); 
-          S0.addTriangle(S0.nv-3,S0.nv-1,S0.nv-2);
-          S0.addVertex(CC0[i].P[k+1]); 
-          S0.addTriangle(S0.nv-3,S0.nv-2,S0.nv-1);
-        }
+   //C0
+   if(C0.n>2){
+      S0.empty();
+      S0.addVertex(CC0[0].P[0]);
+      S0.addVertex(CC0[0].P[C0.n-1]);
+      for(int i=0;i<numRotation;i++)
+      {
+        int j=i+1;
+        if(j>numRotation-1) j=0;
+         
+        for(int k=0;k<CC0[i].n-1;k++){
         
+          if(k==0){
+            S0.addVertex(CC0[j].P[k+1]); 
+            S0.addVertex(CC0[i].P[k+1]);
+            S0.addTriangle(0,S0.nv-2,S0.nv-1);
+          }else if (k==CC0[i].n-2){
+            S0.addTriangle(S0.nv-1,S0.nv-2,1);
+          }else
+          {
+            S0.addVertex(CC0[j].P[k+1]); 
+            S0.addTriangle(S0.nv-3,S0.nv-1,S0.nv-2);
+            S0.addVertex(CC0[i].P[k+1]); 
+            S0.addTriangle(S0.nv-3,S0.nv-2,S0.nv-1);
+          }
+          
+        }
       }
+      
+       stroke(white);  fill(green);S0.showFront();
+   }
+     
+     
+     //C1
+    if(C1.n>2){
+        S1.empty();
+        S1.addVertex(CC1[0].P[0]);
+        S1.addVertex(CC1[0].P[C1.n-1]);
+        for(int i=0;i<numRotation;i++)
+        {
+          int j=i+1;
+          if(j>numRotation-1) j=0;
+           
+          for(int k=0;k<CC1[i].n-1;k++){
+          
+            if(k==0){
+              S1.addVertex(CC1[j].P[k+1]); 
+              S1.addVertex(CC1[i].P[k+1]);
+              S1.addTriangle(0,S1.nv-2,S1.nv-1);
+            }else if (k==CC1[i].n-2){
+              S1.addTriangle(S1.nv-1,S1.nv-2,1);
+            }else
+            {
+              S1.addVertex(CC1[j].P[k+1]); 
+              S1.addTriangle(S1.nv-3,S1.nv-1,S1.nv-2);
+              S1.addVertex(CC1[i].P[k+1]); 
+              S1.addTriangle(S1.nv-3,S1.nv-2,S1.nv-1);
+            }
+            
+          }
+        }
+         fill(red);
+         stroke(white); S1.showFront();
     }
+    
+     //C2
+    if(C2.n>2){
+        S2.empty();
+        S2.addVertex(CC2[0].P[0]);
+        S2.addVertex(CC2[0].P[C2.n-1]);
+        for(int i=0;i<numRotation;i++)
+        {
+          int j=i+1;
+          if(j>numRotation-1) j=0;
+           
+          for(int k=0;k<CC2[i].n-1;k++){
+          
+            if(k==0){
+              S2.addVertex(CC2[j].P[k+1]); 
+              S2.addVertex(CC2[i].P[k+1]);
+              S2.addTriangle(0,S2.nv-2,S2.nv-1);
+            }else if (k==CC2[i].n-2){
+              S2.addTriangle(S2.nv-1,S2.nv-2,1);
+            }else
+            {
+              S2.addVertex(CC2[j].P[k+1]); 
+              S2.addTriangle(S2.nv-3,S2.nv-1,S2.nv-2);
+              S2.addVertex(CC2[i].P[k+1]); 
+              S2.addTriangle(S2.nv-3,S2.nv-2,S2.nv-1);
+            }
+            
+          }
+        }
+         fill(red);
+         stroke(white); S2.showFront();
+    }
+    
+     //C3
+    if(C3.n>2){
+        S3.empty();
+        S3.addVertex(CC3[0].P[0]);
+        S3.addVertex(CC3[0].P[C3.n-1]);
+        for(int i=0;i<numRotation;i++)
+        {
+          int j=i+1;
+          if(j>numRotation-1) j=0;
+           
+          for(int k=0;k<CC3[i].n-1;k++){
+          
+            if(k==0){
+              S3.addVertex(CC3[j].P[k+1]); 
+              S3.addVertex(CC3[i].P[k+1]);
+              S3.addTriangle(0,S3.nv-2,S3.nv-1);
+            }else if (k==CC3[i].n-2){
+              S3.addTriangle(S3.nv-1,S3.nv-2,1);
+            }else
+            {
+              S3.addVertex(CC3[j].P[k+1]); 
+              S3.addTriangle(S3.nv-3,S3.nv-1,S3.nv-2);
+              S3.addVertex(CC3[i].P[k+1]); 
+              S3.addTriangle(S3.nv-3,S3.nv-2,S3.nv-1);
+            }
+            
+          }
+        }
+        noFill(); fill(red);
+         stroke(white); S3.showFront();
+    }
+    
+     
+     
+     
       
 }
 
