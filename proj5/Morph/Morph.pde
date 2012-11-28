@@ -195,7 +195,22 @@ Boolean pressed=false;
 
 void mousePressed() {pressed=true;
  if (keyPressed) {
-   if (key=='1' ) {  if(C0.n<1) C0.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C0.P[C0.n-1])>10 && C0.n<500) C0.addPt(new pt(mouseX,mouseY,0));}
+   if (key=='1' ) {  //done avoid nonconvex here when user is going to insert new point
+     boolean validTurn=false;
+     if(C0.n>=3){
+         float det1=(C0.P[C0.n-2].x-C0.P[C0.n-3].x)*(-(C0.P[C0.n-1].y-C0.P[C0.n-2].y))+(C0.P[C0.n-2].y-C0.P[C0.n-3].y)*(C0.P[C0.n-1].x-C0.P[C0.n-2].x);
+         float det2=(C0.P[C0.n-1].x-C0.P[C0.n-2].x)*(-(mouseY-C0.P[C0.n-1].y))+(C0.P[C0.n-1].y-C0.P[C0.n-2].y)*(mouseX-C0.P[C0.n-1].x);
+         if((det1>0&&det2>0)||(det1<0&&det2<0)) validTurn=true;
+       
+     }else
+        validTurn=true;
+     if(C0.n<1) C0.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C0.P[C0.n-1])>10 && C0.n<500 && validTurn) C0.addPt(new pt(mouseX,mouseY,0));
+ 
+  
+   }
+   
+   
+   
    if (key=='2' ) {  if(C1.n<1) C1.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C1.P[C1.n-1])>10 && C1.n<500) C1.addPt(new pt(mouseX,mouseY,0));}
    if (key=='3' ) {  if(C2.n<1) C2.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C2.P[C2.n-1])>10 && C2.n<500) C2.addPt(new pt(mouseX,mouseY,0));}
    if (key=='4' ) {  if(C3.n<1) C3.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C3.P[C3.n-1])>10 && C3.n<500) C3.addPt(new pt(mouseX,mouseY,0));}
@@ -417,5 +432,6 @@ void makeMesh(){
     }
       
 }
- 
+
+
 
