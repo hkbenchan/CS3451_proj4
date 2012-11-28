@@ -35,6 +35,7 @@ void initView() {Q=P(0,0,0); I=V(1,0,0); J=V(0,1,0); K=V(0,0,1); F = P(0,0,0); E
 
 // ******************************** MESHES ***********************************************
 //Mesh M=new Mesh(); // meshes for models M0 and M1
+Mesh S0=new Mesh();//meshes for Soilid 1
 
 float volume1=0, volume0=0;
 float sampleDistance=1;
@@ -61,6 +62,8 @@ void setup() {
   initView(); // declares the local frames for 3D GUI
 
   // ***************** Load meshes
+  S0.declareVectors();
+  S0.resetMarkers().computeBox().updateON();
   //M.declareVectors().loadMeshVTS("data/horse.vts");
  // M.resetMarkers().computeBox().updateON(); // makes a cube around C[8]
   // ***************** Load Curve
@@ -75,7 +78,7 @@ void setup() {
   
 // ******************************************************************************************************************* DRAW      
 void draw() {  
-
+  
   background(white);
 /*  // -------------------------------------------------------- Help ----------------------------------
   if(showHelpText) {
@@ -118,7 +121,9 @@ void draw() {
   
   noFill();
   BuildShape();
-  buildSurface();
+ // buildSurface();
+  
+  if(C0.n>2)  makeMesh();
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
  /*   if(pressed) {
      if (keyPressed&&(key=='a'||key=='s')) {
@@ -147,7 +152,7 @@ void draw() {
   
      // -------------------------------------------------------- show mesh ----------------------------------   
   // if(showMesh) { fill(yellow); if(M.showEdges) stroke(white);  else noStroke(); M.showFront();} 
-   
+   fill(yellow); stroke(white); S0.showFront();
     // -------------------------- pick mesh corner ----------------------------------   
 //   if(pressed) if (keyPressed&&(key=='.')) M.pickc(Pick());
  
@@ -378,8 +383,39 @@ void buildSurface(){
       
       
     }
+}
+
+void makeMesh(){
   
-  
+    S0.empty();
+
+    
+    S0.addVertex(CC0[0].P[0]);
+    S0.addVertex(CC0[0].P[C0.n-1]);
+    for(int i=0;i<10;i++)
+    {
+      int j=i+1;
+      if(j>9) j=0;
+       
+      for(int k=0;k<CC0[i].n-1;k++){
+      
+        if(k==0){
+          S0.addVertex(CC0[j].P[k+1]); 
+          S0.addVertex(CC0[i].P[k+1]);
+          S0.addTriangle(0,S0.nv-2,S0.nv-1);
+        }else if (k==CC0[i].n-2){
+          S0.addTriangle(S0.nv-1,S0.nv-2,1);
+        }else
+        {
+          S0.addVertex(CC0[j].P[k+1]); 
+          S0.addTriangle(S0.nv-3,S0.nv-1,S0.nv-2);
+          S0.addVertex(CC0[i].P[k+1]); 
+          S0.addTriangle(S0.nv-3,S0.nv-2,S0.nv-1);
+        }
+        
+      }
+    }
+      
 }
  
 
