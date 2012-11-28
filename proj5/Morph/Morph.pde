@@ -25,6 +25,7 @@ Boolean
   showHelpText=false; 
 
 int numRotation=10;
+char lastShapeKey='1';
 // String SCC = "-"; // info on current corner
 
 d_sphere DS = new d_sphere();
@@ -112,25 +113,62 @@ void draw() {
     return;
     } */
     
+  if (keyPressed)
+     if(key=='1'||key=='2'||key=='3'||key=='4')
+        lastShapeKey=key;
+  if(pressed) {
+     
+     if (keyPressed&&(key=='d'||key=='i')) {
+       
+        if(lastShapeKey=='1'){
+           C0.pick(P(mouseX,mouseY,0));
+           if(key=='d') { C0.delete();}
+           if(key=='i') { C0.insert();} 
+        }
+         if(lastShapeKey=='2'){
+           C1.pick(P(mouseX,mouseY,0));
+           if(key=='d') { C1.delete();}
+           if(key=='i') { C1.insert();} 
+        }
+           if(lastShapeKey=='3'){
+           C2.pick(P(mouseX,mouseY,0));
+           if(key=='d') { C2.delete();}
+           if(key=='i') { C2.insert();} 
+        }
+           if(lastShapeKey=='4'){
+           C3.pick(P(mouseX,mouseY,0));
+           if(key=='d') { C3.delete();}
+           if(key=='i') { C3.insert();} 
+        }
+
+      }
+
+  }
+    
   fill(black);
   camera();
   specular(0,0,0); shininess(0);
-  text("Number of sample (change by pressed s and mouse click): "+numRotation,10,20);
-  text("Press ?: HELP ",10,60);
+  text("Number of sample (change by pressed s and mouse left click): "+numRotation,10,20);
+  text("Current selected shape: Shape "+lastShapeKey,10,50);
+  text("Press ?: HELP ",10,80);
   
   noFill();
   stroke(green);
   C0.drawEdges() ;
-  C0.showSamples();
+  stroke(black);
+  C0.showSamples(2);
   stroke(red);
   C1.drawEdges() ;
-  C1.showSamples();
+  stroke(black);
+  C1.showSamples(2);
   stroke(cyan);
   C2.drawEdges() ;
-  C2.showSamples();
+  stroke(black);
+  C2.showSamples(2);
   stroke(magenta);
   C3.drawEdges() ;
-  C3.showSamples();
+  stroke(black);
+  C3.showSamples(2);
   
   
   // -------------------------------------------------------- 3D display : set up view ----------------------------------
@@ -154,7 +192,13 @@ void draw() {
   BuildShape();
  // buildSurface();
   
- if(showMesh)  makeMesh();
+ if(showMesh) {
+   makeMesh();
+   if(lastShapeKey=='1'){stroke(white);  fill(green);S0.showFront();}
+   if(lastShapeKey=='2'){stroke(white);  fill(red);S1.showFront();}
+   if(lastShapeKey=='3'){stroke(white);  fill(cyan);S2.showFront();}
+   if(lastShapeKey=='4'){stroke(white);  fill(magenta );S3.showFront();}
+ }
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
  /*   if(pressed) {
      if (keyPressed&&(key=='a'||key=='s')) {
@@ -237,7 +281,7 @@ void mousePressed() {pressed=true;
         validTurn=true;
      if(C0.n<1) C0.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C0.P[C0.n-1])>10 && C0.n<500 && validTurn) C0.addPt(new pt(mouseX,mouseY,0));
  
-  
+     lastShapeKey='1';
    }
    
    if (key=='2' ) { 
@@ -250,6 +294,7 @@ void mousePressed() {pressed=true;
        }else
           validTurn=true;
        if(C1.n<1) C1.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C1.P[C1.n-1])>10 && C1.n<500 && validTurn) C1.addPt(new pt(mouseX,mouseY,0));
+       lastShapeKey='2';
    }
    if (key=='3' ) {
           boolean validTurn=false;
@@ -261,6 +306,7 @@ void mousePressed() {pressed=true;
          }else
           validTurn=true;
        if(C2.n<1) C2.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C2.P[C2.n-1])>10 && C2.n<500 && validTurn) C2.addPt(new pt(mouseX,mouseY,0));
+       lastShapeKey='3';
      
    }
    if (key=='4' ) {  
@@ -273,6 +319,7 @@ void mousePressed() {pressed=true;
          }else
           validTurn=true;
         if(C3.n<1) C3.addPt(new pt(mouseX,mouseY,0)); else if(d(new pt(mouseX,mouseY,0),C3.P[C3.n-1])>10 && C3.n<500 && validTurn) C3.addPt(new pt(mouseX,mouseY,0));
+        lastShapeKey='4';
    }
    
    
@@ -291,7 +338,10 @@ void mousePressed() {pressed=true;
 
 
 void mouseDragged() {
-     
+      if(lastShapeKey=='1'&&keyPressed&&key=='m') {C0.pick(P(mouseX,mouseY,0));C0.P[C0.p].x+=(mouseX-pmouseX);C0.P[C0.p].y+=(mouseY-pmouseY); } 
+       if(lastShapeKey=='2'&&keyPressed&&key=='m') {C1.pick(P(mouseX,mouseY,0));C1.P[C1.p].x+=(mouseX-pmouseX);C1.P[C1.p].y+=(mouseY-pmouseY); } 
+        if(lastShapeKey=='3'&&keyPressed&&key=='m') {C2.pick(P(mouseX,mouseY,0));C2.P[C2.p].x+=(mouseX-pmouseX);C2.P[C2.p].y+=(mouseY-pmouseY); } 
+         if(lastShapeKey=='4'&&keyPressed&&key=='m') {C3.pick(P(mouseX,mouseY,0));C3.P[C3.p].x+=(mouseX-pmouseX);C3.P[C3.p].y+=(mouseY-pmouseY); } 
   // adjust the obstacle size
 //  if(keyPressed&&key=='a') {C.dragPoint( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); } // move selected vertex of curve C in screen plane
 //  if(keyPressed&&key=='s') {C.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); } // move selected vertex of curve C in screen plane
@@ -327,7 +377,7 @@ void keyPressed() {
   if(key=='j') {}
   if(key=='k') {}
   if(key=='l') {}
-  if(key=='m') {showMesh=!showMesh;}
+ // if(key=='m') {showMesh=!showMesh;}
   if(key=='n') {showNMBE=!showNMBE;}
   if(key=='o') {}
   if(key=='p') {}
@@ -619,7 +669,7 @@ void makeMesh(){
         }
       }
       
-       stroke(white);  fill(green);S0.showFront();
+      
    }
      
      
@@ -651,8 +701,7 @@ void makeMesh(){
             
           }
         }
-         fill(red);
-         stroke(white); S1.showFront();
+       
     }
     
      //C2
@@ -683,8 +732,7 @@ void makeMesh(){
             
           }
         }
-         fill(red);
-         stroke(white); S2.showFront();
+       
     }
     
      //C3
@@ -715,8 +763,7 @@ void makeMesh(){
             
           }
         }
-        noFill(); fill(red);
-         stroke(white); S3.showFront();
+       
     }
     
      

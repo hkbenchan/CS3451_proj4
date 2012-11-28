@@ -46,7 +46,7 @@ class Curve {
     else {
       for (int i=n-1; i>p; i--) P[i+1].set(P[i]); 
       n++;  
-      P[p+1].set(P[p]); 
+      P[p+1].set(P(P[p].x+15,P[p].y+15,0)); 
       p=p+1; 
       }
     };
