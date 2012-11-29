@@ -22,10 +22,12 @@ showFrenetQuads=false,
 showFrenetNormal=false, 
 filterFrenetNormal=true, 
 showTwistFreeNormal=false, 
-showHelpText=false; 
+showHelpText=false, 
+showTwoEnd=false;
 
-int numRotation=10;
-char lastShapeKey='1';
+int[] numRotation= new int[4];
+int lastShapeKey= 1;
+float localTime = 0.0;
 // String SCC = "-"; // info on current corner
 
 //d_sphere DS = new d_sphere();
@@ -112,39 +114,52 @@ void setup() {
   // ***************** Load Curve
   // C.loadPts();
 
+  numRotation[0] = 10;
+  numRotation[1] = 10;
+  numRotation[2] = 10;
+  numRotation[3] = 10;
+
   // ***************** Set view
-  for (int i=0;i<numRotation;i++) {
+
+  for (int i=0;i<numRotation[0];i++) {
     CC0[i]=new Curve();
+  }
+  for (int i=0;i<numRotation[1];i++) {
     CC1[i]=new Curve();
+  }
+  for (int i=0;i<numRotation[2];i++) {
     CC2[i]=new Curve();
+  }
+  for (int i=0;i<numRotation[3];i++) {
     CC3[i]=new Curve();
   }
   F=P(); 
   E=P(0, 0, 500);
+  loadInfos();
   //  for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
-//  DS.init();
+  //  DS.init();
 }
 
 // ******************************************************************************************************************* DRAW      
 void draw() {  
 
   background(white);
-  /*  // -------------------------------------------------------- Help ----------------------------------
+   // -------------------------------------------------------- Help ----------------------------------
    if(showHelpText) {
    camera(); // 2D display to show cutout
    lights();
    fill(black); writeHelp();
    return;
-   } */
+   }
 
   if (keyPressed)
     if (key=='1'||key=='2'||key=='3'||key=='4')
-      lastShapeKey=key;
+      lastShapeKey=(int)(key)-48;
   if (pressed) {
 
     if (keyPressed&&(key=='d'||key=='i')) {
 
-      if (lastShapeKey=='1') {
+      if (lastShapeKey== 1) {
         C0.pick(P(mouseX, mouseY, 0));
         if (key=='d') { 
           C0.delete();
@@ -153,7 +168,7 @@ void draw() {
           C0.insert();
         }
       }
-      if (lastShapeKey=='2') {
+      if (lastShapeKey== 2) {
         C1.pick(P(mouseX, mouseY, 0));
         if (key=='d') { 
           C1.delete();
@@ -162,7 +177,7 @@ void draw() {
           C1.insert();
         }
       }
-      if (lastShapeKey=='3') {
+      if (lastShapeKey== 3) {
         C2.pick(P(mouseX, mouseY, 0));
         if (key=='d') { 
           C2.delete();
@@ -171,7 +186,7 @@ void draw() {
           C2.insert();
         }
       }
-      if (lastShapeKey=='4') {
+      if (lastShapeKey== 4) {
         C3.pick(P(mouseX, mouseY, 0));
         if (key=='d') { 
           C3.delete();
@@ -187,10 +202,10 @@ void draw() {
   camera();
   specular(0, 0, 0); 
   shininess(0);
-  text("Number of sample (change by pressed s and mouse left click): "+numRotation, 10, 20);
+  text("Number of sample (',': inc; '.': dec) : "+numRotation[lastShapeKey-1], 10, 20);
   text("Current selected shape: Shape "+lastShapeKey, 10, 50);
   text("Press ?: HELP ", 10, 80);
-  fill(yellow);
+
   noFill();
   stroke(green);
   C0.drawEdges() ;
@@ -221,7 +236,7 @@ void draw() {
   vec EF = V(E, F);
   vec tmp = R(U, PI/2, I, J);
   vec REF = R(U(EF), -PI/2, U(EF), N(U, U(EF)));
-//  DS.setCenter(P(E, A(V(250, U(EF)), A(V(150, REF), V(-100, U))))).displayG();
+  //  DS.setCenter(P(E, A(V(250, U(EF)), A(V(150, REF), V(-100, U))))).displayG();
 
   //  println("EF: "+EF.x+" "+EF.y+" "+EF.z);
   //  println("REF: "+REF.x+" "+REF.y+" "+REF.z);
@@ -231,28 +246,58 @@ void draw() {
   noFill();
   BuildShape();
   // buildSurface();
-
+  lights();
   if (showMesh) {
     makeMesh();
-    if (lastShapeKey=='1') {
-      stroke(white);  
+    if ((C0.n>0) && ((showTwoEnd) || (lastShapeKey==1))) {
+      stroke(blue);  
       fill(green);
+      pushMatrix();
+      if (showTwoEnd) {
+        translate(-width/4, 0, 0);
+      }
+      //rotateX(acos(d(I,Dir)));
+      //rotateY(acos(d(J,Dir))); 
+      //rotateZ(acos(d(K,Dir)));
       S0.showFront();
+      if (keyPressed && key=='U') S0.showLabels();
+      popMatrix();
     }
-    if (lastShapeKey=='2') {
-      stroke(white);  
+    if ((C1.n>0) && ((showTwoEnd) || (lastShapeKey==2))) {
+      stroke(blue);  
       fill(red);
+      pushMatrix();
+      if (showTwoEnd) {
+        translate(width/4, 0, 0);
+      }
+      //rotateX(acos(d(I,Dir)));
+      //rotateY(acos(d(J,Dir))); 
+      //rotateZ(acos(d(K,Dir)));
       S1.showFront();
+      if (keyPressed && key=='U') S1.showLabels();
+      popMatrix();
     }
-    if (lastShapeKey=='3') {
+    if ((C2.n>0) && (lastShapeKey == 3)) {
       stroke(white);  
       fill(cyan);
+      pushMatrix();
+//      rotateX(acos(d(I, Dir)));
+//      rotateY(acos(d(J, Dir))); 
+//      rotateZ(acos(d(K, Dir)));
       S2.showFront();
+      if (keyPressed && key=='U') S2.showLabels();
+      popMatrix();
     }
-    if (lastShapeKey=='4') {
+    if ((C3.n>0)  && (lastShapeKey == 4)) {
       stroke(white);  
       fill(magenta );
+      pushMatrix();
+//      rotateX(acos(d(I, Dir)));
+//      rotateY(acos(d(J, Dir))); 
+//      rotateZ(acos(d(K, Dir)));
       S3.showFront();
+      if (keyPressed && key=='U') S3.showLabels();
+      popMatrix();
     }
   }
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
@@ -306,27 +351,29 @@ void draw() {
     float mY = (mouseY-pmouseY);
     E=R(E, PI*mX/(width/2), I, K, F); 
     E=R(E, -PI*mY/(height/2), J, K, F);
-    Dir = V(P(),R(P(P(),Dir), PI*mX/(width/2), I, K, F));
-    Dir = V(P(),R(P(P(),Dir), -PI*mY/(height/2), J, K, F));
-    
+    Dir = V(P(), R(P(P(), Dir), PI*mX/(width/2), I, K, F));
+    Dir = V(P(), R(P(P(), Dir), -PI*mY/(height/2), J, K, F));
   } // rotate E around F 
   //if(keyPressed&&key=='D'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K); }  //   Moves E forward/backward
   //if(keyPressed&&key=='d'&&mousePressed) {E=P(E,-float(mouseY-pmouseY),K);U=R(U, -PI*float(mouseX-pmouseX)/width,I,J); }//   Moves E forward/backward and rotatees around (F,Y)
 
   // -------------------------------------------------------- Disable z-buffer to display occluded silhouettes and other things ---------------------------------- 
-  hint(DISABLE_DEPTH_TEST);  // show on top
+  //hint(DISABLE_DEPTH_TEST);  // show on top
   //  stroke(black); if(showControl) {C0.showSamples(2);}
   //  if(showMesh&&showSilhouette) {stroke(dbrown); M.drawSilhouettes(); }  // display silhouettes
   //  strokeWeight(2); stroke(red);if(showMesh&&showNMBE) M.showMBEs();  // manifold borders
-  camera(); // 2D view to write help text
+  //camera(); // 2D view to write help text
   //  writeFooterHelp();
-  hint(ENABLE_DEPTH_TEST); // show silouettes
+  //hint(ENABLE_DEPTH_TEST); // show silouettes
 
   // -------------------------------------------------------- SNAP PICTURE ---------------------------------- 
   if (snapping) snapPicture(); // does not work for a large screen
   pressed=false;
 
-  println(Dir.x+" "+Dir.y+" "+Dir.z);
+  localTime += 0.01;
+  if (localTime > 1) {
+    localTime = 0.0; //reset time
+  }
 } // end draw
 
 
@@ -348,7 +395,7 @@ void mousePressed() {
       if (C0.n<1) C0.addPt(new pt(mouseX, mouseY, 0)); 
       else if (d(new pt(mouseX, mouseY, 0), C0.P[C0.n-1])>10 && C0.n<500 && validTurn) C0.addPt(new pt(mouseX, mouseY, 0));
 
-      lastShapeKey='1';
+      lastShapeKey= 1;
     }
 
     if (key=='2' ) { 
@@ -362,7 +409,7 @@ void mousePressed() {
         validTurn=true;
       if (C1.n<1) C1.addPt(new pt(mouseX, mouseY, 0)); 
       else if (d(new pt(mouseX, mouseY, 0), C1.P[C1.n-1])>10 && C1.n<500 && validTurn) C1.addPt(new pt(mouseX, mouseY, 0));
-      lastShapeKey='2';
+      lastShapeKey= 2;
     }
     if (key=='3' ) {
       boolean validTurn=false;
@@ -375,7 +422,7 @@ void mousePressed() {
         validTurn=true;
       if (C2.n<1) C2.addPt(new pt(mouseX, mouseY, 0)); 
       else if (d(new pt(mouseX, mouseY, 0), C2.P[C2.n-1])>10 && C2.n<500 && validTurn) C2.addPt(new pt(mouseX, mouseY, 0));
-      lastShapeKey='3';
+      lastShapeKey= 3;
     }
     if (key=='4' ) {  
       boolean validTurn=false;
@@ -388,36 +435,36 @@ void mousePressed() {
         validTurn=true;
       if (C3.n<1) C3.addPt(new pt(mouseX, mouseY, 0)); 
       else if (d(new pt(mouseX, mouseY, 0), C3.P[C3.n-1])>10 && C3.n<500 && validTurn) C3.addPt(new pt(mouseX, mouseY, 0));
-      lastShapeKey='4';
+      lastShapeKey= 4;
     }
   }
 }
 
 
 void mouseDragged() {
-  if (lastShapeKey=='1'&&keyPressed&&key=='m') {
+  if (lastShapeKey== 1&&keyPressed&&key=='m') {
     C0.pick(P(mouseX, mouseY, 0));
     C0.P[C0.p].x+=(mouseX-pmouseX);
     C0.P[C0.p].y+=(mouseY-pmouseY);
   } 
-  if (lastShapeKey=='2'&&keyPressed&&key=='m') {
+  if (lastShapeKey== 2&&keyPressed&&key=='m') {
     C1.pick(P(mouseX, mouseY, 0));
     C1.P[C1.p].x+=(mouseX-pmouseX);
     C1.P[C1.p].y+=(mouseY-pmouseY);
   } 
-  if (lastShapeKey=='3'&&keyPressed&&key=='m') {
+  if (lastShapeKey== 3&&keyPressed&&key=='m') {
     C2.pick(P(mouseX, mouseY, 0));
     C2.P[C2.p].x+=(mouseX-pmouseX);
     C2.P[C2.p].y+=(mouseY-pmouseY);
   } 
-  if (lastShapeKey=='4'&&keyPressed&&key=='m') {
+  if (lastShapeKey== 4&&keyPressed&&key=='m') {
     C3.pick(P(mouseX, mouseY, 0));
     C3.P[C3.p].x+=(mouseX-pmouseX);
     C3.P[C3.p].y+=(mouseY-pmouseY);
   }
-    
-  
-  
+
+
+
   // adjust the obstacle size
   //  if(keyPressed&&key=='a') {C.dragPoint( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); } // move selected vertex of curve C in screen plane
   //  if(keyPressed&&key=='s') {C.dragPoint( V(.5*(mouseX-pmouseX),I,-.5*(mouseY-pmouseY),J) ); } // move selected vertex of curve C in screen plane
@@ -481,6 +528,7 @@ void keyPressed() {
     showTube=!showTube;
   }
   if (key=='u') {
+    showTwoEnd=!showTwoEnd;
   }
   if (key=='v') {
   } // move S2
@@ -513,6 +561,7 @@ void keyPressed() {
   if (key=='K') {
   }
   //  if(key=='L') {M.loadMeshVTS().updateON().resetMarkers().computeBox(); F.set(M.Cbox); E.set(P(F,M.rbox*2,K)); for(int i=0; i<10; i++) vis[i]=true;}
+  if (key=='L') {loadInfos();}
   if (key=='M') {
   }
   //if(key=='N') {M.next();}
@@ -532,7 +581,7 @@ void keyPressed() {
   }
   if (key=='V') {
   } 
-  //  if(key=='W') {M.saveMeshVTS();}
+  if(key=='W') { saveInfos(); }
   if (key=='X') {
   } // drag mesh vertex in xy and neighbors (mouseDragged)
   //  if(key=='Y') {M.refine(); M.makeAllVisible();}
@@ -580,13 +629,13 @@ void keyPressed() {
     showHelpText=!showHelpText;
   }
   if (key=='.') {
-    numRotation--;
-    if (numRotation<=4) numRotation=4;
+    numRotation[lastShapeKey-1]--;
+    if (numRotation[lastShapeKey-1]<=3) numRotation[lastShapeKey-1]=3;
     restoreNormalRotation();
   } 
   if (key==',') {
-    numRotation++;
-    if (numRotation>=50) numRotation=50;
+    numRotation[lastShapeKey-1]++;
+    if (numRotation[lastShapeKey-1]>=50) numRotation[lastShapeKey-1]=50;
     restoreNormalRotation();
   }
   if (key=='^') {
@@ -632,159 +681,100 @@ void BuildShape() {
 
   //C0
   if (C0.n>1) {
-    originalAxis=V(C0.P[0], C0.P[C0.n-1]);
-  }
-  //(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
-  angle=0;
-  for (int i=0;i<numRotation;i++) {
-    vec axis;
-    axis=R(I, angle, I, J);
-    CC0[i].n=C0.n;
-    for (int j=0;j<C0.n;j++) {
-      pt newP=P();
-      newP.set(O);
-      float x= d(originalAxis, V(C0.P[0], C0.P[j]))/n(originalAxis);
-      //println(d(C0.P[0],C0.P[j]));
-      float y=sqrt(d(C0.P[0], C0.P[j])*d(C0.P[0], C0.P[j])-x*x);
-      //   println(x+" "+y);
-      CC0[i].P[j]=newP.add(V(x, K, y, axis));
-    }
-    angle=(i+1)*2*PI/(numRotation-1);
-  }
+    //println("construct CC0");
+    originalAxis=V(0, C0.P[0].y-C0.P[C0.n-1].y, 0);
+    //(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
+    angle=0;
+    //println(C0.P[0].y+" "+C0.P[C0.n-1].y);
+    pt StartPt = P(0, C0.P[0].y, 0);
 
+    for (int i=0;i<numRotation[0];i++) {
+      vec axis;
+      axis=R(I, angle, I, K);
+      CC0[i].n=C0.n+2;
+      CC0[i].P[0]=P();
+      for (int j=0;j<C0.n;j++) {
+        pt newP=P();
+        newP.set(O);
+        float y= d(originalAxis, V(StartPt, C0.P[j]))/n(originalAxis);
+        //println(d(C0.P[0],C0.P[j]));
+
+
+
+        float x=sqrt(d(StartPt, C0.P[j])*d(StartPt, C0.P[j])-y*y);
+        CC0[i].P[j+1]=newP.add(V(y, J, x, axis));
+      }
+      
+      CC0[i].P[C0.n+1] = P(0, -abs(C0.P[C0.n-1].y-C0.P[0].y), 0);
+      angle=(i+1)*2*PI/numRotation[0];
+      //println("axis: "+axis.x+" "+axis.y+" "+axis.z);
+      //      for (int j=0;j<CC0[i].n; j++) {
+      //        println("Pt, i: "+i+" j: "+j+" "+CC0[i].P[j].x+" "+CC0[i].P[j].y+" "+CC0[i].P[j].z);
+      //      }
+    }
+    //println("end of c CC0");
+  }
   //C1
   if (C1.n>1) {
-    originalAxis=V(C1.P[0], C1.P[C1.n-1]);
-  }
-  //println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
-  angle=0;
-  for (int i=0;i<numRotation;i++) {
-    vec axis;
-    axis=R(I, angle, I, J);
-    CC1[i].n=C1.n;
-    for (int j=0;j<C1.n;j++) {
-      pt newP=P();
-      newP.set(O);
-      float x= d(originalAxis, V(C1.P[0], C1.P[j]))/n(originalAxis);
-      //println(d(C1.P[0],C1.P[j]));
-      float y=sqrt(d(C1.P[0], C1.P[j])*d(C1.P[0], C1.P[j])-x*x);
-      //   println(x+" "+y);
-      CC1[i].P[j]=newP.add(V(x, K, y, axis));
+    originalAxis=V(0, C1.P[0].y-C1.P[C1.n-1].y, 0);
+    pt StartPt = P(0, C1.P[0].y, 0);
+    angle=0;
+    for (int i=0;i<numRotation[1];i++) {
+      vec axis;
+      axis=R(I, angle, I, K);
+      CC1[i].n=C1.n+2;
+      CC1[i].P[0]=P();
+      for (int j=0;j<C1.n;j++) {
+        pt newP=P();
+        newP.set(O);
+        float y= d(originalAxis, V(StartPt, C1.P[j]))/n(originalAxis);
+        float x=sqrt(d(StartPt, C1.P[j])*d(StartPt, C1.P[j])-y*y);
+        CC1[i].P[j+1]=newP.add(V(y, J, x, axis));
+      }
+      CC1[i].P[C1.n+1] = P(0, -abs(C1.P[C1.n-1].y-C1.P[0].y), 0);
+      angle=(i+1)*2*PI/numRotation[1];
     }
-    angle=(i+1)*2*PI/(numRotation-1);
   }
-
   //C2
   if (C2.n>1) {
-    originalAxis=V(C2.P[0], C2.P[C2.n-1]);
-  }
-  //println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
-  angle=0;
-  for (int i=0;i<numRotation;i++) {
-    vec axis;
-    axis=R(I, angle, I, J);
-    CC2[i].n=C2.n;
-    for (int j=0;j<C2.n;j++) {
-      pt newP=P();
-      newP.set(O);
-      float x= d(originalAxis, V(C2.P[0], C2.P[j]))/n(originalAxis);
-      //println(d(C2.P[0],C2.P[j]));
-      float y=sqrt(d(C2.P[0], C2.P[j])*d(C2.P[0], C2.P[j])-x*x);
-      //   println(x+" "+y);
-      CC2[i].P[j]=newP.add(V(x, K, y, axis));
+    originalAxis=V(0, C2.P[0].y-C2.P[C2.n-1].y, 0);
+    pt StartPt = P(0, C2.P[0].y, 0);
+    angle=0;
+    for (int i=0;i<numRotation[2];i++) {
+      vec axis;
+      axis=R(I, angle, I, K);
+      CC2[i].n=C2.n+2;
+      CC2[i].P[0]=P();
+      for (int j=0;j<C2.n;j++) {
+        pt newP=P();
+        newP.set(O);
+        float y= d(originalAxis, V(StartPt, C2.P[j]))/n(originalAxis);
+        float x=sqrt(d(StartPt, C2.P[j])*d(StartPt, C2.P[j])-y*y);
+        CC2[i].P[j+1]=newP.add(V(y, J, x, axis));
+      }
+      CC2[i].P[C2.n+1] = P(0, -abs(C2.P[C2.n-1].y-C2.P[0].y), 0);
+      angle=(i+1)*2*PI/numRotation[2];
     }
-    angle=(i+1)*2*PI/(numRotation-1);
   }
-
   //C3
   if (C3.n>1) {
-    originalAxis=V(C3.P[0], C3.P[C3.n-1]);
-  }
-  //println(originalAxis.x+"  "+originalAxis.y+"  "+originalAxis.z);
-  angle=0;
-  for (int i=0;i<numRotation;i++) {
-    vec axis;
-    axis=R(I, angle, I, J);
-    CC3[i].n=C3.n;
-    for (int j=0;j<C3.n;j++) {
-      pt newP=P();
-      newP.set(O);
-      float x= d(originalAxis, V(C3.P[0], C3.P[j]))/n(originalAxis);
-      //println(d(C3.P[0],C3.P[j]));
-      float y=sqrt(d(C3.P[0], C3.P[j])*d(C3.P[0], C3.P[j])-x*x);
-      //   println(x+" "+y);
-      CC3[i].P[j]=newP.add(V(x, K, y, axis));
-    }
-    angle=(i+1)*2*PI/(numRotation-1);
-  }
-}
-
-void buildSurface() {
-  //C0
-  fill(green);
-  stroke(black);
-  for (int i=0;i<numRotation;i++)
-  {
-    int j=i+1;
-    if (j>numRotation-1) j=0;
-    for (int k=0;k<CC0[i].n-1;k++) {
-      beginShape();
-      vertex(CC0[i].P[k]); 
-      vertex(CC0[i].P[k+1]); 
-      vertex(CC0[j].P[k+1]); 
-      vertex(CC0[j].P[k]); 
-      endShape();
-    }
-  }
-
-  //C1
-  fill(red);
-  stroke(black);
-  for (int i=0;i<numRotation;i++)
-  {
-    int j=i+1;
-    if (j>numRotation-1) j=0;
-    for (int k=0;k<CC1[i].n-1;k++) {
-      beginShape();
-      vertex(CC1[i].P[k]); 
-      vertex(CC1[i].P[k+1]); 
-      vertex(CC1[j].P[k+1]); 
-      vertex(CC1[j].P[k]); 
-      endShape();
-    }
-  }
-
-  //C2
-  fill(cyan);
-  stroke(black);
-  for (int i=0;i<numRotation;i++)
-  {
-    int j=i+1;
-    if (j>numRotation-1) j=0;
-    for (int k=0;k<CC2[i].n-1;k++) {
-      beginShape();
-      vertex(CC2[i].P[k]); 
-      vertex(CC2[i].P[k+1]); 
-      vertex(CC2[j].P[k+1]); 
-      vertex(CC2[j].P[k]); 
-      endShape();
-    }
-  }
-
-  //C3
-  fill(magenta);
-  stroke(black);
-  for (int i=0;i<numRotation;i++)
-  {
-    int j=i+1;
-    if (j>numRotation-1) j=0;
-    for (int k=0;k<CC3[i].n-1;k++) {
-      beginShape();
-      vertex(CC3[i].P[k]); 
-      vertex(CC3[i].P[k+1]); 
-      vertex(CC3[j].P[k+1]); 
-      vertex(CC3[j].P[k]); 
-      endShape();
+    originalAxis=V(0, C3.P[0].y-C3.P[C3.n-1].y, 0);
+    pt StartPt = P(0, C3.P[0].y, 0);
+    angle=0;
+    for (int i=0;i<numRotation[3];i++) {
+      vec axis;
+      axis=R(I, angle, I, K);
+      CC3[i].n=C3.n+2;
+      CC3[i].P[0]=P();
+      for (int j=0;j<C3.n;j++) {
+        pt newP=P();
+        newP.set(O);
+        float y= d(originalAxis, V(StartPt, C3.P[j]))/n(originalAxis);
+        float x=sqrt(d(StartPt, C3.P[j])*d(StartPt, C3.P[j])-y*y);
+        CC3[i].P[j+1]=newP.add(V(y, J, x, axis));
+      }
+      CC3[i].P[C3.n+1] = P(0, -abs(C3.P[C3.n-1].y-C3.P[0].y), 0);
+      angle=(i+1)*2*PI/numRotation[3];
     }
   }
 }
@@ -792,34 +782,40 @@ void buildSurface() {
 void makeMesh() {
 
   //C0
-  if (C0.n>2) {
+  if (C0.n>1) {
     S0.empty();
     S0.addVertex(CC0[0].P[0]);
-    S0.addVertex(CC0[0].P[C0.n-1]);
-    for (int i=0;i<numRotation;i++)
+    S0.addVertex(CC0[0].P[CC0[0].n-1]);
+
+    for (int i=0;i<numRotation[0];i++)
     {
       int j=i+1;
-      if (j>numRotation-1) j=0;
+      if (j>numRotation[0]-1) j=0;
 
-      for (int k=0;k<CC0[i].n-1;k++) {
+      for (int k=1;k<CC0[i].n;k++) {
 
-        if (k==0) {
-          S0.addVertex(CC0[j].P[k+1]); 
-          S0.addVertex(CC0[i].P[k+1]);
+        if (k==1) {
+          S0.addVertex(CC0[j].P[k]); 
+          S0.addVertex(CC0[i].P[k]);
           S0.addTriangle(0, S0.nv-2, S0.nv-1);
         }
-        else if (k==CC0[i].n-2) {
-          S0.addTriangle(S0.nv-1, S0.nv-2, 1);
+        else if (k==CC0[i].n-1) {
+          S0.addTriangle(1,S0.nv-1, S0.nv-2);
         }
         else
         {
-          S0.addVertex(CC0[j].P[k+1]); 
+          S0.addVertex(CC0[j].P[k]); 
           S0.addTriangle(S0.nv-3, S0.nv-1, S0.nv-2);
-          S0.addVertex(CC0[i].P[k+1]); 
+          S0.addVertex(CC0[i].P[k]);
           S0.addTriangle(S0.nv-3, S0.nv-2, S0.nv-1);
         }
       }
     }
+    //S0.addTriangle(S0.nv-1,S0.nv-2,1);
+    //for (int i=0; i<S0.nv; i++) {
+    //  println("S0: i: "+i+" "+S0.G[i].x+" "+S0.G[i].y+" "+S0.G[i].z);
+    //}
+    //println(S0.nv);
   }
 
 
@@ -827,27 +823,27 @@ void makeMesh() {
   if (C1.n>2) {
     S1.empty();
     S1.addVertex(CC1[0].P[0]);
-    S1.addVertex(CC1[0].P[C1.n-1]);
-    for (int i=0;i<numRotation;i++)
+    S1.addVertex(CC1[0].P[CC1[0].n-1]);
+    for (int i=0;i<numRotation[1];i++)
     {
       int j=i+1;
-      if (j>numRotation-1) j=0;
+      if (j>numRotation[1]-1) j=0;
 
-      for (int k=0;k<CC1[i].n-1;k++) {
+      for (int k=1;k<CC1[i].n;k++) {
 
-        if (k==0) {
-          S1.addVertex(CC1[j].P[k+1]); 
-          S1.addVertex(CC1[i].P[k+1]);
+        if (k==1) {
+          S1.addVertex(CC1[j].P[k]); 
+          S1.addVertex(CC1[i].P[k]);
           S1.addTriangle(0, S1.nv-2, S1.nv-1);
         }
-        else if (k==CC1[i].n-2) {
-          S1.addTriangle(S1.nv-1, S1.nv-2, 1);
+        else if (k==CC1[i].n-1) {
+          S1.addTriangle(1, S1.nv-1, S1.nv-2);
         }
         else
         {
-          S1.addVertex(CC1[j].P[k+1]); 
+          S1.addVertex(CC1[j].P[k]); 
           S1.addTriangle(S1.nv-3, S1.nv-1, S1.nv-2);
-          S1.addVertex(CC1[i].P[k+1]); 
+          S1.addVertex(CC1[i].P[k]); 
           S1.addTriangle(S1.nv-3, S1.nv-2, S1.nv-1);
         }
       }
@@ -858,27 +854,27 @@ void makeMesh() {
   if (C2.n>2) {
     S2.empty();
     S2.addVertex(CC2[0].P[0]);
-    S2.addVertex(CC2[0].P[C2.n-1]);
-    for (int i=0;i<numRotation;i++)
+    S2.addVertex(CC2[0].P[CC2[0].n-1]);
+    for (int i=0;i<numRotation[2];i++)
     {
       int j=i+1;
-      if (j>numRotation-1) j=0;
+      if (j>numRotation[2]-1) j=0;
 
-      for (int k=0;k<CC2[i].n-1;k++) {
+      for (int k=1;k<CC2[i].n;k++) {
 
-        if (k==0) {
-          S2.addVertex(CC2[j].P[k+1]); 
-          S2.addVertex(CC2[i].P[k+1]);
+        if (k==1) {
+          S2.addVertex(CC2[j].P[k]); 
+          S2.addVertex(CC2[i].P[k]);
           S2.addTriangle(0, S2.nv-2, S2.nv-1);
         }
-        else if (k==CC2[i].n-2) {
-          S2.addTriangle(S2.nv-1, S2.nv-2, 1);
+        else if (k==CC2[i].n-1) {
+          S2.addTriangle(1, S2.nv-1, S2.nv-2);
         }
         else
         {
-          S2.addVertex(CC2[j].P[k+1]); 
+          S2.addVertex(CC2[j].P[k]); 
           S2.addTriangle(S2.nv-3, S2.nv-1, S2.nv-2);
-          S2.addVertex(CC2[i].P[k+1]); 
+          S2.addVertex(CC2[i].P[k]); 
           S2.addTriangle(S2.nv-3, S2.nv-2, S2.nv-1);
         }
       }
@@ -889,27 +885,27 @@ void makeMesh() {
   if (C3.n>2) {
     S3.empty();
     S3.addVertex(CC3[0].P[0]);
-    S3.addVertex(CC3[0].P[C3.n-1]);
-    for (int i=0;i<numRotation;i++)
+    S3.addVertex(CC3[0].P[CC3[0].n-1]);
+    for (int i=0;i<numRotation[3];i++)
     {
       int j=i+1;
-      if (j>numRotation-1) j=0;
+      if (j>numRotation[3]-1) j=0;
 
-      for (int k=0;k<CC3[i].n-1;k++) {
+      for (int k=1;k<CC3[i].n;k++) {
 
-        if (k==0) {
-          S3.addVertex(CC3[j].P[k+1]); 
-          S3.addVertex(CC3[i].P[k+1]);
+        if (k==1) {
+          S3.addVertex(CC3[j].P[k]); 
+          S3.addVertex(CC3[i].P[k]);
           S3.addTriangle(0, S3.nv-2, S3.nv-1);
         }
-        else if (k==CC3[i].n-2) {
-          S3.addTriangle(S3.nv-1, S3.nv-2, 1);
+        else if (k==CC3[i].n-1) {
+          S3.addTriangle(1, S3.nv-1, S3.nv-2);
         }
         else
         {
-          S3.addVertex(CC3[j].P[k+1]); 
+          S3.addVertex(CC3[j].P[k]); 
           S3.addTriangle(S3.nv-3, S3.nv-1, S3.nv-2);
-          S3.addVertex(CC3[i].P[k+1]); 
+          S3.addVertex(CC3[i].P[k]); 
           S3.addTriangle(S3.nv-3, S3.nv-2, S3.nv-1);
         }
       }
@@ -918,30 +914,107 @@ void makeMesh() {
 }
 
 void restoreNormalRotation() {
-  for(int i=0;i<numRotation;i++){
-         if (CC0[i] == null)
-           CC0[i]=new Curve();
-         else {
-           CC0[i].empty();
-           CC0[i].resetPoints();
-         }
-         if (CC1[i] == null)
-           CC1[i]=new Curve();
-         else {
-           CC1[i].empty();
-           CC1[i].resetPoints();
-         }
-         if (CC2[i] == null)
-           CC2[i]=new Curve();
-         else {
-           CC2[i].empty();
-           CC2[i].resetPoints();
-         }
-         if (CC3[i] == null)
-           CC3[i]=new Curve();
-         else {
-           CC3[i].empty();
-           CC3[i].resetPoints();
-         }
+
+  if (lastShapeKey == 1) {
+    for (int i=0;i<numRotation[0];i++) {
+      if (CC0[i] == null)
+        CC0[i]=new Curve();
+      else {
+        CC0[i].empty();
+        CC0[i].resetPoints();
       }
+    }
+  } 
+  else if (lastShapeKey == 2) {
+    for (int i=0;i<numRotation[1];i++) {
+      if (CC1[i] == null)
+        CC1[i]=new Curve();
+      else {
+        CC1[i].empty();
+        CC1[i].resetPoints();
+      }
+    }
+  } 
+  else if (lastShapeKey == 3) {
+    for (int i=0;i<numRotation[2];i++) {
+      if (CC2[i] == null)
+        CC2[i]=new Curve();
+      else {
+        CC2[i].empty();
+        CC2[i].resetPoints();
+      }
+    }
+  } 
+  else if (lastShapeKey == 4) {
+    for (int i=0;i<numRotation[3];i++) {
+      if (CC3[i] == null)
+        CC3[i]=new Curve();
+      else {
+        CC3[i].empty();
+        CC3[i].resetPoints();
+      }
+    }
+  }
 }
+
+void saveInfos() {
+  // need to save C, D, numRotation, lastShapeKey
+  saveSetting("data/setting");
+  C0.savePts("data/C0.pts");
+  C1.savePts("data/C1.pts");
+  C2.savePts("data/C2.pts");
+  C3.savePts("data/C3.pts");
+}
+
+void saveSetting(String fn) {
+  String [] inppts = new String [6];
+  int s=0; inppts[s++]=str(Dir.x)+","+str(Dir.y)+","+str(Dir.z); 
+  for (int i=0; i<4; i++)
+    inppts[s++]=str(numRotation[i]);
+  inppts[s++]=str(lastShapeKey);
+  saveStrings(fn,inppts);
+}
+
+void loadInfos() {
+  loadSetting("data/setting");
+  C0.loadPts("data/C0.pts");
+  C1.loadPts("data/C1.pts");
+  C2.loadPts("data/C2.pts");
+  C3.loadPts("data/C3.pts");
+  
+  for (int i=0;i<numRotation[0];i++) {
+    CC0[i]=new Curve();
+  }
+  for (int i=0;i<numRotation[1];i++) {
+    CC1[i]=new Curve();
+  }
+  for (int i=0;i<numRotation[2];i++) {
+    CC2[i]=new Curve();
+  }
+  for (int i=0;i<numRotation[3];i++) {
+    CC3[i]=new Curve();
+  }
+  
+  
+}
+
+void loadSetting(String fn) {
+  String [] ss = loadStrings(fn);
+  String subpts;
+  int s=0; int comma1, comma2;  
+  String S =  ss[0];
+  comma1=S.indexOf(',');
+  float x=float(S.substring(0, comma1));
+  String R = S.substring(comma1+1);
+  comma2=R.indexOf(',');      
+  float y=float(R.substring(0, comma2)); 
+  float z=float(R.substring(comma2+1));
+  Dir = V(x,y,z);
+  s++;
+  for (int i=0; i<4; i++) {
+    numRotation[i] = int(ss[s]);
+    s++;
+  }
+  lastShapeKey = int(ss[s]);
+}
+

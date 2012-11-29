@@ -279,10 +279,12 @@ void makeDChain (float w, int m) { // make a chain of size 2w wiht m elements
    return this;
    }
  
- int addVertex(pt P) { G[nv].set(P); nv++; return nv-1;};
+ int addVertex(pt P) { //println("NV: "+nv+" pt: "+P.x+" "+P.y+" "+P.z); 
+ G[nv].set(P); nv++; return nv-1;};
  int addVertex(float x, float y, float z) { G[nv].x=x; G[nv].y=y; G[nv].z=z; nv++; return nv-1;};
   
- void addTriangle(int i, int j, int k) {V[nc++]=i; V[nc++]=j; V[nc++]=k; visible[nt++]=true;} // adds a triangle
+ void addTriangle(int i, int j, int k) { //println("Add tri: "+i+" "+j+" "+k); 
+ V[nc++]=i; V[nc++]=j; V[nc++]=k; visible[nt++]=true;} // adds a triangle
  void addTriangle(int i, int j, int k, int m) {V[nc++]=i; V[nc++]=j; V[nc++]=k; tm[nt]=m; visible[nt++]=true; } // adds a triangle
 
  Mesh updateON() {computeO(); normals(); return this;} // recomputes O and normals
