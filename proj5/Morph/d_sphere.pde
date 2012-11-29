@@ -30,7 +30,8 @@ class d_sphere {
     // small sphere
     pushMatrix();
       fill(green);
-      translate(0,this.radius+this.small_radius,0);
+      pt tran = P(P(),V(this.radius+this.small_radius,Dir));
+      translate(tran.x,tran.y,tran.z);
       sphere(this.small_radius);
     popMatrix();
     // end
