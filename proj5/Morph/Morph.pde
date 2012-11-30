@@ -398,7 +398,7 @@ void mousePressed() {
       else
         validTurn=true;
       if (C0.n<1) C0.addPt(new pt(mouseX, mouseY, 0)); 
-      else if (d(new pt(mouseX, mouseY, 0), C0.P[C0.n-1])>10 && C0.n<500 && validTurn) C0.addPt(new pt(mouseX, mouseY, 0));
+      else if (d(new pt(mouseX, mouseY, 0), C0.P[C0.n-1])>10 && C0.n<500) C0.addPt(new pt(mouseX, mouseY, 0));
 
       lastShapeKey= 1;
     }
@@ -413,7 +413,7 @@ void mousePressed() {
       else
         validTurn=true;
       if (C1.n<1) C1.addPt(new pt(mouseX, mouseY, 0)); 
-      else if (d(new pt(mouseX, mouseY, 0), C1.P[C1.n-1])>10 && C1.n<500 && validTurn) C1.addPt(new pt(mouseX, mouseY, 0));
+      else if (d(new pt(mouseX, mouseY, 0), C1.P[C1.n-1])>10 && C1.n<500 ) C1.addPt(new pt(mouseX, mouseY, 0));
       lastShapeKey= 2;
     }
     if (key=='3' ) {
@@ -426,7 +426,7 @@ void mousePressed() {
       else
         validTurn=true;
       if (C2.n<1) C2.addPt(new pt(mouseX, mouseY, 0)); 
-      else if (d(new pt(mouseX, mouseY, 0), C2.P[C2.n-1])>10 && C2.n<500 && validTurn) C2.addPt(new pt(mouseX, mouseY, 0));
+      else if (d(new pt(mouseX, mouseY, 0), C2.P[C2.n-1])>10 && C2.n<500) C2.addPt(new pt(mouseX, mouseY, 0));
       lastShapeKey= 3;
     }
     if (key=='4' ) {  
@@ -439,7 +439,7 @@ void mousePressed() {
       else
         validTurn=true;
       if (C3.n<1) C3.addPt(new pt(mouseX, mouseY, 0)); 
-      else if (d(new pt(mouseX, mouseY, 0), C3.P[C3.n-1])>10 && C3.n<500 && validTurn) C3.addPt(new pt(mouseX, mouseY, 0));
+      else if (d(new pt(mouseX, mouseY, 0), C3.P[C3.n-1])>10 && C3.n<500) C3.addPt(new pt(mouseX, mouseY, 0));
       lastShapeKey= 4;
     }
   }
@@ -1044,10 +1044,10 @@ void removeNonConvex(){
          //remove those minority
          for(int i=0;i<C0.n-2;i++){
              if(leftTurn>rightTurn){
-                 if(crossProduct2D(C0.P[i],C0.P[i+1],C0.P[i+2])>0) removePoint(0,i+2);
+                 if(crossProduct2D(C0.P[i],C0.P[i+1],C0.P[i+2])>0) removePoint(0,i+1);
              }
              else{
-                 if(crossProduct2D(C0.P[i],C0.P[i+1],C0.P[i+2])<0) removePoint(0,i+2);
+                 if(crossProduct2D(C0.P[i],C0.P[i+1],C0.P[i+2])<0) removePoint(0,i+1);
              }
            
          }
@@ -1073,10 +1073,10 @@ void removeNonConvex(){
          //remove those minority
          for(int i=0;i<C1.n-2;i++){
              if(leftTurn>rightTurn){
-                 if(crossProduct2D(C1.P[i],C1.P[i+1],C1.P[i+2])>0) removePoint(1,i+2);
+                 if(crossProduct2D(C1.P[i],C1.P[i+1],C1.P[i+2])>0) removePoint(1,i+1);
              }
              else{
-                 if(crossProduct2D(C1.P[i],C1.P[i+1],C1.P[i+2])<0) removePoint(1,i+2);
+                 if(crossProduct2D(C1.P[i],C1.P[i+1],C1.P[i+2])<0) removePoint(1,i+1);
              }
            
          }
@@ -1102,10 +1102,10 @@ void removeNonConvex(){
          //remove those minority
          for(int i=0;i<C2.n-2;i++){
              if(leftTurn>rightTurn){
-                 if(crossProduct2D(C2.P[i],C2.P[i+1],C2.P[i+2])>0) removePoint(2,i+2);
+                 if(crossProduct2D(C2.P[i],C2.P[i+1],C2.P[i+2])>0) removePoint(2,i+1);
              }
              else{
-                 if(crossProduct2D(C2.P[i],C2.P[i+1],C2.P[i+2])<0) removePoint(2,i+2);
+                 if(crossProduct2D(C2.P[i],C2.P[i+1],C2.P[i+2])<0) removePoint(2,i+1);
              }
            
          }
@@ -1131,10 +1131,10 @@ void removeNonConvex(){
          //remove those minority
          for(int i=0;i<C3.n-2;i++){
              if(leftTurn>rightTurn){
-                 if(crossProduct2D(C3.P[i],C3.P[i+1],C3.P[i+2])>0) removePoint(3,i+2);
+                 if(crossProduct2D(C3.P[i],C3.P[i+1],C3.P[i+2])>0) removePoint(3,i+1);
              }
              else{
-                 if(crossProduct2D(C3.P[i],C3.P[i+1],C3.P[i+2])<0) removePoint(3,i+2);
+                 if(crossProduct2D(C3.P[i],C3.P[i+1],C3.P[i+2])<0) removePoint(3,i+1);
              }
            
          }
