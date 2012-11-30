@@ -13,7 +13,7 @@ void writeHelp () {fill(dblue);
     scribe("Delete point: 'd' and mouse click", i++);
     scribe("Insert point: 'i' and mouse click", i++);
     scribe("-------Other------", i++);
-    scribe("Load setting: L; Save setting: S", i++);
+    scribe("Load setting: L; Save setting: W", i++);
     
 //    scribe("CURVE t:show, s:move XY, a:move XZ , v:move all XY, b:move all XZ, A;archive, C.load",i++);
 //    scribe("MESH L:load, .:pick corner, Y:subdivide, E:smoothen, W:write, N:next, S.swing ",i++);

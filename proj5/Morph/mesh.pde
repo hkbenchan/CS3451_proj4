@@ -68,6 +68,9 @@ vec[] Nt = new vec [maxnt];                // triangles normals
  int[] SMt = new int[maxnt];                // sum of triangle markers for isolation
  int prevc = 0;                             // previously selected corner
  int rings=2;                           // number of rings for colorcoding
+ 
+ // edge to edge morph usage
+ vec[] B = new vec[3*maxnt];       // for normal into the triangle plane
 
 //  ==================================== OFFSETS ====================================
  void offset() {
@@ -838,8 +841,46 @@ Mesh loadMeshVTS(String fn) {
     return c;
     }  
     
-
-     
+  void computeBNormal(pt v1, pt v2, pt v3, int k) {
+    vec N = N(V( v1 , v2 ), V( v1 , v3 ));
+    B[k] = N( N, V(v1, v2) );
+  }
+  
+  // compute B normal
+  void computeBNormalForAll() {
+    int j = 0;
+    for (int i=0; i<nt; i++) {
+      // for each triangle, compute three B normal
+      computeBNormal(g(c(i)),g(n(c(i))),g(p(c(i))),j);
+      j++;
+      computeBNormal(g(n(c(i))),g(p(c(i))),g(c(i)),j);
+      j++;
+      computeBNormal(g(p(c(i))),g(n(c(i))),g(c(i)),j);
+      j++;
+    }
+  }
+  
+  vec Bn(int c) { // find B normal of itself
+    return B[v(c)];
+  }
+  
+  vec Bn2(int c) { // find another B normal
+    return B[v(o(p(c)))];
+  }
+  
+  void displayBn(int c) {
+    vec V1 = Bn(c);
+    vec V2 = Bn(c);
+    fill(black);
+    stroke(black);
+    show(g(c),"Bn :",V(10,V1));
+    show(g(o(p(c))), "Bn2 :", V(10,V2));
+    show(g(c), V1);
+    show(g(o(p(c))), V2);
+    noStroke();
+    noFill();
+  }
+  
   } // ==== END OF MESH CLASS
   
 vec labelD=new vec(-4,+4, 12);           // offset vector for drawing labels  
@@ -850,3 +891,4 @@ Boolean projPonE (pt P, pt A, pt B) {return d(V(A,B),V(A,P))>0 && d(V(B,A),V(B,P
 Boolean projPonT (pt P, pt A, pt B, pt C) {vec N = U(N(V(A,B),V(A,C))); return m(N,V(A,B),V(A,P))>0 && m(N,V(B,C),V(B,P))>0 && m(N,V(C,A),V(C,P))>0 ;} // P projects onto the interior of edge(A,B)
 pt CPonE (pt P, pt A, pt B) {return P(A,d(V(A,B),V(A,P))/d(V(A,B),V(A,B)),V(A,B));}
 pt CPonT (pt P, pt A, pt B, pt C) {vec N = U(N(V(A,B),V(A,C))); return P(P,-d(V(A,P),N),N);}
+

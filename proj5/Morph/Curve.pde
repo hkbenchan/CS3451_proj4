@@ -231,6 +231,55 @@ class Curve {
       }
 
   vec II = V(1,0,0), JJ = V(0,1,0);
+  
+  Curve makeQuad(Mesh A, Mesh B, float t) {
+    this.empty();
+    
+    for (int c1=0; c1<A.nc; c1++) {
+      for (int c2=0; c2<B.nc; c2++) {
+      // assume picked two points from A and B
+      // do the checking
+      vec B1 = A.Bn(c1);
+      vec B2 = A.Bn2(c1);
+      vec B3 = B.Bn(c2);
+      vec B4 = B.Bn2(c2);
+      pt V1 = A.g(c1), V2 = A.g(A.n(c1)), V3 = B.g(c2), V4 = B.g(B.n(c2));
+      vec N = N( V( V1, V2 ), V( V3, V4 ) );
+      //println("N: "+N.x);
+      Boolean condition = d(N,B1)<0?true:false;
+      Boolean gdMatch = true;
+      if (condition != (d(N,B2)<0))
+        gdMatch = false;
+      if (condition != (d(N,B3)<0))
+        gdMatch = false;
+      if (condition != (d(N,B4)<0))
+        gdMatch = false;
+      if (gdMatch) {
+        // find the quad
+        pt p1 = P(V1, t ,V4), p2 = P(V2, t, V3), p3 = P(V1, t, V3), p4 = P(V2, t, V4);
+        // add points
+        this.append(p1).append(p2).append(p4).append(p3);
+      }
+      }
+    }
+        
+    return this;
+  }
+  
+  void BuildShapeForQuad() {
+    fill(blue); stroke(black);
+    
+    for (int i=0; i<this.n/4; i++) {
+      beginShape();
+        vertex(P[4*i]);
+        vertex(P[4*i+1]);
+        vertex(P[4*i+2]);
+        vertex(P[4*i+3]);
+      endShape();
+    }
+  }
+  
+  
   }  // end class Curve
 
  
