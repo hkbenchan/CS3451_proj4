@@ -11,6 +11,7 @@ GLU glu;
 
 // ****************************** GLOBAL VARIABLES FOR DISPLAY OPTIONS *********************************
 Boolean 
+animate=true,
 showMesh=true, 
 translucent=false, 
 showSilhouette=true, 
@@ -314,7 +315,7 @@ void draw() {
       QuadSet.makeQuad(S0, S1, localTime).BuildShapeForQuad();
     }
     
-  }else
+  }else {
      buildSurface();  
   }
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
@@ -386,8 +387,8 @@ void draw() {
   // -------------------------------------------------------- SNAP PICTURE ---------------------------------- 
   if (snapping) snapPicture(); // does not work for a large screen
   pressed=false;
-
-  localTime += 0.01;
+  if (animate)
+    localTime += 0.01;
   if (localTime > 1) {
     localTime = 0.0; //reset time
   }
@@ -480,7 +481,7 @@ void mouseDragged() {
     C3.P[C3.p].y+=(mouseY-pmouseY);
   }
 
-
+  if (keyPressed&&key=='t') { localTime += float(mouseX-pmouseX)/width; if (localTime<0) {localTime = 0;} if (localTime>1) {localTime=1;} }
 
   // adjust the obstacle size
   //  if(keyPressed&&key=='a') {C.dragPoint( V(.5*(mouseX-pmouseX),I,.5*(mouseY-pmouseY),K) ); } // move selected vertex of curve C in screen plane
@@ -505,7 +506,8 @@ void keyReleased() {
 
 void keyPressed() {
   if (key=='a') {
-  } // drag curve control point in xz (mouseDragged)
+    animate = !animate;
+  } 
   if (key=='b') {
   }  // move S2 in XZ
   if (key=='c') {
@@ -542,7 +544,7 @@ void keyPressed() {
   if (key=='s') {
   } // drag curve control point in xz (mouseDragged)
   if (key=='t') {
-    showTube=!showTube;
+    //showTube=!showTube;
   }
   if (key=='u') {
     showTwoEnd=!showTwoEnd;

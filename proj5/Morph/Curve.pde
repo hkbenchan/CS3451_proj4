@@ -276,6 +276,9 @@ class Curve {
         vertex(P[4*i+2]);
         vertex(P[4*i+3]);
       endShape();
+      beginShape();
+        
+      endShape();
     }
   }
   
