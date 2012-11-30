@@ -22,7 +22,8 @@ showFrenetQuads=false,
 showFrenetNormal=false, 
 filterFrenetNormal=true, 
 showTwistFreeNormal=false, 
-showHelpText=false, 
+showHelpText=false,
+showAnimateQuad = false,
 showTwoEnd=false;
 
 int[] numRotation= new int[4];
@@ -75,6 +76,8 @@ Curve CC2[]=new Curve[100];
 
 Curve C3=new Curve();
 Curve CC3[]=new Curve[100];
+
+Curve QuadSet = new Curve();
 
 //Curve C0 = new Curve(5), S0 = new Curve(), C1 = new Curve(5), S1 = new Curve();  // control points and spines 0 and 1
 //Curve C= new Curve(11,130,P());
@@ -303,8 +306,17 @@ void draw() {
       if (keyPressed && key=='U') S3.showLabels();
       popMatrix();
     }
+    
+    if (showAnimateQuad)
+    {
+      S0.computeBNormalForAll();
+      S1.computeBNormalForAll();
+      QuadSet.makeQuad(S0, S1, localTime).BuildShapeForQuad();
+    }
+    
   }else
-     buildSurface();
+     buildSurface();  
+  }
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
   /*   if(pressed) {
    if (keyPressed&&(key=='a'||key=='s')) {
@@ -597,11 +609,14 @@ void keyPressed() {
   // if(key=='~') {showSpine=!showSpine;}
   //  if(key=='!') {snapping=true;}
   if (key=='@') {
+    showAnimateQuad =!showAnimateQuad;
   }
   if (key=='#') {
   }
   //  if(key=='$') {M.moveTo(C.Pof(10));} // ???????
   if (key=='%') {
+    S0.computeBNormalForAll();
+    S0.displayBn(0);
   }
   if (key=='&') {
   }
