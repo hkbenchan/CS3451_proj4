@@ -278,7 +278,7 @@ void draw() {
       popMatrix();
     }
     if ((C2.n>0) && (lastShapeKey == 3)) {
-      stroke(white);  
+      stroke(blue);   
       fill(cyan);
       pushMatrix();
 //      rotateX(acos(d(I, Dir)));
@@ -289,7 +289,7 @@ void draw() {
       popMatrix();
     }
     if ((C3.n>0)  && (lastShapeKey == 4)) {
-      stroke(white);  
+      stroke(blue);  
       fill(magenta );
       pushMatrix();
 //      rotateX(acos(d(I, Dir)));
@@ -1033,8 +1033,76 @@ void removeNonConvex(){
   }
   */
 }
-
 void buildSurface(){
-  
-  
+  //C0
+  if(lastShapeKey==1){
+    fill(brown);stroke(blue);  
+    for(int i=0;i<numRotation[0];i++)
+    {
+      int j=i+1;
+      if(j>numRotation[0]-1) j=0;
+      for(int k=0;k<CC0[i].n-1;k++){
+        beginShape();
+        vertex(CC0[i].P[k]);
+        vertex(CC0[i].P[k+1]);
+        vertex(CC0[j].P[k+1]);
+        vertex(CC0[j].P[k]);
+        endShape();
+      }
+    }
+  }
+    //C1
+   if(lastShapeKey==2){
+     fill(brown);stroke(blue);  
+    for(int i=0;i<numRotation[1];i++)
+    {
+      int j=i+1;
+      if(j>numRotation[1]-1) j=0;
+      for(int k=0;k<CC1[i].n-1;k++){
+        beginShape();
+        vertex(CC1[i].P[k]);
+        vertex(CC1[i].P[k+1]);
+        vertex(CC1[j].P[k+1]);
+        vertex(CC1[j].P[k]);
+        endShape();
+      }
+    }
+   }
+   
+    //C2
+   if(lastShapeKey==3){
+     fill(brown);stroke(blue);  
+    for(int i=0;i<numRotation[2];i++)
+    {
+      int j=i+1;
+      if(j>numRotation[2]-1) j=0;
+      for(int k=0;k<CC2[i].n-1;k++){
+        beginShape();
+        vertex(CC2[i].P[k]);
+        vertex(CC2[i].P[k+1]);
+        vertex(CC2[j].P[k+1]);
+        vertex(CC2[j].P[k]);
+        endShape();
+      }
+    }
+   }
+   
+    //C3
+   if(lastShapeKey==4){
+     fill(brown);stroke(blue);  
+    for(int i=0;i<numRotation[3];i++)
+    {
+      int j=i+1;
+      if(j>numRotation[3]-1) j=0;
+      for(int k=0;k<CC3[i].n-1;k++){
+        beginShape();
+        vertex(CC3[i].P[k]);
+        vertex(CC3[i].P[k+1]);
+        vertex(CC3[j].P[k+1]);
+        vertex(CC3[j].P[k]);
+        endShape();
+      }
+    }
+   }
+    
 }
