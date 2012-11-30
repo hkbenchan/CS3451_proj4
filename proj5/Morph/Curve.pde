@@ -234,16 +234,17 @@ class Curve {
   
   Curve makeQuad(Mesh A, Mesh B, float t) {
     this.empty();
-    
+    if (B.nc<3) {return this;}
     for (int c1=0; c1<A.nc; c1++) {
+      vec B1 = A.Bn(c1);
+      vec B2 = A.Bn2(c1);
+      pt V1 = A.g(c1), V2 = A.g(A.n(c1));
       for (int c2=0; c2<B.nc; c2++) {
       // assume picked two points from A and B
       // do the checking
-      vec B1 = A.Bn(c1);
-      vec B2 = A.Bn2(c1);
       vec B3 = B.Bn(c2);
       vec B4 = B.Bn2(c2);
-      pt V1 = A.g(c1), V2 = A.g(A.n(c1)), V3 = B.g(c2), V4 = B.g(B.n(c2));
+      pt V3 = B.g(c2), V4 = B.g(B.n(c2));
       vec N = N( V( V1, V2 ), V( V3, V4 ) );
       //println("N: "+N.x);
       Boolean condition = d(N,B1)<0?true:false;
@@ -266,8 +267,8 @@ class Curve {
     return this;
   }
   
-  void BuildShapeForQuad() {
-    fill(blue); stroke(black);
+  Curve BuildShapeForQuad(color a) {
+    fill(a); stroke(black);
     
     for (int i=0; i<this.n/4; i++) {
       beginShape();
@@ -276,12 +277,51 @@ class Curve {
         vertex(P[4*i+2]);
         vertex(P[4*i+3]);
       endShape();
-      beginShape();
-        
-      endShape();
     }
+    
+    noFill(); noStroke();
+    return this;
   }
   
+  Curve makeFaceToVertex( Mesh A, Mesh B, float time_t) {
+    this.empty();
+    if (B.nc<3) return this;
+    for (int t=0; t<A.nt; t++) {
+      pt V1 = A.g(A.c(t)), V2 = A.g(A.n(A.c(t))), V3 = A.g(A.p(A.c(t)));
+      vec NFA = N ( V(V1,V3), V(V1,V2) );
+      // assume picked two points from A and B
+      // do the checking
+      //float dot_ans = 0;
+      int matched_pt = 0;
+      for (int c1=1; c1<B.nc; c1++) {
+        vec C = V( B.g(matched_pt), B.g(c1) );
+        float d = d( NFA, C);
+        if ( d>=0 ) { matched_pt = c1; }
+       
+      }
+      pt V4 = B.g(matched_pt);
+      pt V11 = P( V1, time_t, V4), V12 = P( V11, (1-time_t), V(V1, V2)), V13 = P( V11, (1-time_t), V(V1,V3) );
+      this.append(V11).append(V12).append(V13);
+      
+    }
+    
+    return this; 
+  }
+  
+  
+  Curve BuildShapeForFV(color a) {
+    fill(a); stroke(black);
+    
+    for (int i=0; i<this.n/3; i++) {
+      beginShape();
+        vertex(P[3*i]);
+        vertex(P[3*i+1]);
+        vertex(P[3*i+2]);
+      endShape();
+    }
+    
+    return this; 
+  }
   
   }  // end class Curve
 

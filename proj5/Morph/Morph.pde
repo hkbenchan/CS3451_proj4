@@ -78,7 +78,7 @@ Curve CC2[]=new Curve[100];
 Curve C3=new Curve();
 Curve CC3[]=new Curve[100];
 
-Curve QuadSet = new Curve();
+Curve QuadSet[] = new Curve[3];
 
 //Curve C0 = new Curve(5), S0 = new Curve(), C1 = new Curve(5), S1 = new Curve();  // control points and spines 0 and 1
 //Curve C= new Curve(11,130,P());
@@ -139,6 +139,9 @@ void setup() {
   }
   F=P(); 
   E=P(0, 0, 500);
+  for (int i=0; i<3; i++)
+    QuadSet[i] = new Curve();
+  
   loadInfos();
   //  for(int i=0; i<10; i++) vis[i]=true; // to show all types of triangles
   //  DS.init();
@@ -316,7 +319,11 @@ void draw() {
     {
       S0.computeBNormalForAll();
       S1.computeBNormalForAll();
-      QuadSet.makeQuad(S0, S1, localTime).BuildShapeForQuad();
+      
+      QuadSet[0].makeFaceToVertex( S1, S0, localTime).BuildShapeForFV(green);
+      QuadSet[1].makeFaceToVertex( S1, S0, 1-localTime).BuildShapeForFV(red);
+      QuadSet[2].makeQuad(S0, S1, localTime).BuildShapeForQuad(blue);
+      
     }
     
   }else {
