@@ -245,7 +245,7 @@ void draw() {
 
   noFill();
   BuildShape();
-  // buildSurface();
+ 
   lights();
   if (showMesh) {
     makeMesh();
@@ -299,7 +299,8 @@ void draw() {
       if (keyPressed && key=='U') S3.showLabels();
       popMatrix();
     }
-  }
+  }else
+     buildSurface();
   // -------------------------- display and edit control points of the spines and box ----------------------------------   
   /*   if(pressed) {
    if (keyPressed&&(key=='a'||key=='s')) {
@@ -442,22 +443,22 @@ void mousePressed() {
 
 
 void mouseDragged() {
-  if (lastShapeKey== 1&&keyPressed&&key=='m') {
+  if (lastShapeKey== 1&&keyPressed&&key=='s') {
     C0.pick(P(mouseX, mouseY, 0));
     C0.P[C0.p].x+=(mouseX-pmouseX);
     C0.P[C0.p].y+=(mouseY-pmouseY);
   } 
-  if (lastShapeKey== 2&&keyPressed&&key=='m') {
+  if (lastShapeKey== 2&&keyPressed&&key=='s') {
     C1.pick(P(mouseX, mouseY, 0));
     C1.P[C1.p].x+=(mouseX-pmouseX);
     C1.P[C1.p].y+=(mouseY-pmouseY);
   } 
-  if (lastShapeKey== 3&&keyPressed&&key=='m') {
+  if (lastShapeKey== 3&&keyPressed&&key=='s') {
     C2.pick(P(mouseX, mouseY, 0));
     C2.P[C2.p].x+=(mouseX-pmouseX);
     C2.P[C2.p].y+=(mouseY-pmouseY);
   } 
-  if (lastShapeKey== 4&&keyPressed&&key=='m') {
+  if (lastShapeKey== 4&&keyPressed&&key=='s') {
     C3.pick(P(mouseX, mouseY, 0));
     C3.P[C3.p].x+=(mouseX-pmouseX);
     C3.P[C3.p].y+=(mouseY-pmouseY);
@@ -510,7 +511,7 @@ void keyPressed() {
   }
   if (key=='l') {
   }
-  // if(key=='m') {showMesh=!showMesh;}
+  if(key=='m') {showMesh=!showMesh;}
   if (key=='n') {
     showNMBE=!showNMBE;
   }
@@ -1031,4 +1032,9 @@ void removeNonConvex(){
         }
   }
   */
+}
+
+void buildSurface(){
+  
+  
 }
