@@ -208,21 +208,21 @@ void draw() {
 
   noFill();
   stroke(green);
-  C0.drawEdges() ;
+  if (lastShapeKey==1) C0.drawEdges() ;
   stroke(black);
-  C0.showSamples(2);
+  if (lastShapeKey==1) C0.showSamples(2);
   stroke(red);
-  C1.drawEdges() ;
+  if (lastShapeKey==2) C1.drawEdges() ;
   stroke(black);
-  C1.showSamples(2);
+  if (lastShapeKey==2) C1.showSamples(2);
   stroke(cyan);
-  C2.drawEdges() ;
+  if (lastShapeKey==3) C2.drawEdges() ;
   stroke(black);
-  C2.showSamples(2);
+  if (lastShapeKey==3)  C2.showSamples(2);
   stroke(magenta);
-  C3.drawEdges() ;
+  if (lastShapeKey==4) C3.drawEdges() ;
   stroke(black);
-  C3.showSamples(2);
+  if (lastShapeKey==4)  C3.showSamples(2);
 
 
   // -------------------------------------------------------- 3D display : set up view ----------------------------------
@@ -1018,3 +1018,17 @@ void loadSetting(String fn) {
   lastShapeKey = int(ss[s]);
 }
 
+void removeNonConvex(){
+  //CO
+/*  if (C0.n>=3){
+        for(int i=0;i<C0.n;i++){
+              float det1=(C0.P[C3.n-2].x-C3.P[C3.n-3].x)*(-(C3.P[C3.n-1].y-C3.P[C3.n-2].y))+(C3.P[C3.n-2].y-C3.P[C3.n-3].y)*(C3.P[C3.n-1].x-C3.P[C3.n-2].x);
+              float det2=(C3.P[C3.n-1].x-C3.P[C3.n-2].x)*(-(mouseY-C3.P[C3.n-1].y))+(C3.P[C3.n-1].y-C3.P[C3.n-2].y)*(mouseX-C3.P[C3.n-1].x);
+              if ((det1>0&&det2>0)||(det1<0&&det2<0)) validTurn=true;
+           
+          
+          
+        }
+  }
+  */
+}
