@@ -609,7 +609,7 @@ void purge(int k) {for(int i=0; i<nt; i++) visible[i]=Mt[i]==k;} // hides triang
       computeVertexNormals();
       stroke(black);
       showNormals();
-      println("infun"+ "  "+nv);
+      //println("infun"+ "  "+nv);
  }
 //  ==========================================================  VOLUME ===========================================
   float volume() {float v=0; for (int i=0; i<nt; i++) v+=triVol(i); vol=v/6; return vol; }

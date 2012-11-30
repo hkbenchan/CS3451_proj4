@@ -25,7 +25,10 @@ filterFrenetNormal=true,
 showTwistFreeNormal=false, 
 showHelpText=false,
 showAnimateQuad = false,
-showTwoEnd=false;
+showTwoEnd=false,
+showRedFace=true,
+showGreenFace=true,
+showBlueQuad=true;
 
 int[] numRotation= new int[4];
 int lastShapeKey= 1;
@@ -260,7 +263,7 @@ void draw() {
   lights();
   if (showMesh) {
     makeMesh();
-    if ((C0.n>0) && ((showTwoEnd) || (lastShapeKey==1))) {
+    if ((C0.n>0) && ((showTwoEnd) || ((lastShapeKey==1) && (!showAnimateQuad)))) {
       stroke(blue);  
       fill(green);
       pushMatrix();
@@ -272,10 +275,10 @@ void draw() {
       //rotateZ(acos(d(K,Dir)));
       S0.showFront();
       S0.showTriNormal_VertexNormals();
-      if (keyPressed && key=='U') S0.showLabels();
+      //if (keyPressed && key=='U') S0.showLabels();
       popMatrix();
     }
-    if ((C1.n>0) && ((showTwoEnd) || (lastShapeKey==2))) {
+    if ((C1.n>0) && ((showTwoEnd) || ((lastShapeKey==2) &&(!showAnimateQuad)))) {
       stroke(blue);  
       fill(red);
       pushMatrix();
@@ -290,7 +293,7 @@ void draw() {
       if (keyPressed && key=='U') S1.showLabels();
       popMatrix();
     }
-    if ((C2.n>0) && (lastShapeKey == 3)) {
+    if ((C2.n>0) && ((lastShapeKey == 3) && (!showAnimateQuad))) {
       stroke(blue);   
       fill(cyan);
       pushMatrix();
@@ -302,7 +305,7 @@ void draw() {
       if (keyPressed && key=='U') S2.showLabels();
       popMatrix();
     }
-    if ((C3.n>0)  && (lastShapeKey == 4)) {
+    if ((C3.n>0)  && ((lastShapeKey == 4) && (!showAnimateQuad))) {
       stroke(blue);  
       fill(magenta );
       pushMatrix();
@@ -320,9 +323,9 @@ void draw() {
       S0.computeBNormalForAll();
       S1.computeBNormalForAll();
       
-      QuadSet[0].makeFaceToVertex( S1, S0, localTime).BuildShapeForFV(green);
-      QuadSet[1].makeFaceToVertex( S1, S0, 1-localTime).BuildShapeForFV(red);
-      QuadSet[2].makeQuad(S0, S1, localTime).BuildShapeForQuad(blue);
+      if (showGreenFace) QuadSet[0].makeFaceToVertex( S0, S1, localTime).BuildShapeForFV(green);
+      if (showRedFace) QuadSet[1].makeFaceToVertex( S1, S0, 1-localTime).BuildShapeForFV(red);
+      if (showBlueQuad) QuadSet[2].makeQuad(S0, S1, localTime).BuildShapeForQuad(blue);
       
     }
     
@@ -573,6 +576,7 @@ void keyPressed() {
 
   //  if(key=='A') {C.savePts();}
   if (key=='B') {
+    showBlueQuad =! showBlueQuad;
   }
   //  if(key=='C') {C.loadPts();} // save curve
   if (key=='D') {
@@ -581,6 +585,7 @@ void keyPressed() {
   if (key=='F') {
   }
   if (key=='G') {
+    showGreenFace =! showGreenFace;
   }
   if (key=='H') {
   }
@@ -603,6 +608,7 @@ void keyPressed() {
     exit();
   }
   if (key=='R') {
+    showRedFace =!showRedFace;
   }
   // if(key=='S') {M.swing();}
   if (key=='T') {
@@ -628,8 +634,8 @@ void keyPressed() {
   }
   //  if(key=='$') {M.moveTo(C.Pof(10));} // ???????
   if (key=='%') {
-    S0.computeBNormalForAll();
-    S0.displayBn(0);
+//    S0.computeBNormalForAll();
+//    S0.displayBn(0);
   }
   if (key=='&') {
   }

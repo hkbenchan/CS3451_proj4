@@ -235,17 +235,20 @@ class Curve {
   Curve makeQuad(Mesh A, Mesh B, float t) {
     this.empty();
     if (B.nc<3) {return this;}
+    int count = 0;
     for (int c1=0; c1<A.nc; c1++) {
+      
       vec B1 = A.Bn(c1);
       vec B2 = A.Bn2(c1);
       pt V1 = A.g(c1), V2 = A.g(A.n(c1));
+      count = 0;
       for (int c2=0; c2<B.nc; c2++) {
       // assume picked two points from A and B
       // do the checking
       vec B3 = B.Bn(c2);
       vec B4 = B.Bn2(c2);
       pt V3 = B.g(c2), V4 = B.g(B.n(c2));
-      vec N = N( V( V1, V2 ), V( V3, V4 ) );
+      vec N = N( V( V3, V4 ), V( V1, V2 ) );
       //println("N: "+N.x);
       Boolean condition = d(N,B1)<0?true:false;
       Boolean gdMatch = true;
@@ -260,8 +263,10 @@ class Curve {
         pt p1 = P(V1, t ,V4), p2 = P(V2, t, V3), p3 = P(V1, t, V3), p4 = P(V2, t, V4);
         // add points
         this.append(p1).append(p2).append(p4).append(p3);
+        count++;
       }
       }
+      //if (count == 0) {println("Edge no match");}
     }
         
     return this;
@@ -288,7 +293,7 @@ class Curve {
     if (B.nc<3) return this;
     for (int t=0; t<A.nt; t++) {
       pt V1 = A.g(A.c(t)), V2 = A.g(A.n(A.c(t))), V3 = A.g(A.p(A.c(t)));
-      vec NFA = N ( V(V1,V3), V(V1,V2) );
+      vec NFA = N ( V(V1,V2), V(V1,V3) );
       // assume picked two points from A and B
       // do the checking
       //float dot_ans = 0;
