@@ -152,9 +152,13 @@ void draw() {
    return;
    }
 
-  if (keyPressed)
+  if (keyPressed){
     if (key=='1'||key=='2'||key=='3'||key=='4')
       lastShapeKey=(int)(key)-48;
+    if(key=='C')
+      removeNonConvex();
+      
+  }
   if (pressed) {
 
     if (keyPressed&&(key=='d'||key=='i')) {
@@ -1020,19 +1024,146 @@ void loadSetting(String fn) {
 }
 
 void removeNonConvex(){
+  
   //CO
-/*  if (C0.n>=3){
-        for(int i=0;i<C0.n;i++){
-              float det1=(C0.P[C3.n-2].x-C3.P[C3.n-3].x)*(-(C3.P[C3.n-1].y-C3.P[C3.n-2].y))+(C3.P[C3.n-2].y-C3.P[C3.n-3].y)*(C3.P[C3.n-1].x-C3.P[C3.n-2].x);
-              float det2=(C3.P[C3.n-1].x-C3.P[C3.n-2].x)*(-(mouseY-C3.P[C3.n-1].y))+(C3.P[C3.n-1].y-C3.P[C3.n-2].y)*(mouseX-C3.P[C3.n-1].x);
-              if ((det1>0&&det2>0)||(det1<0&&det2<0)) validTurn=true;
+ if(lastShapeKey==1){
+  if (C0.n>=3){
+        boolean removeDone=false;
+        
+        
+       //determine turning majority
+         int leftTurn=0;
+         int rightTurn=0;
+         for(int i=0;i<C0.n-2;i++){
+             if(crossProduct2D(C0.P[i],C0.P[i+1],C0.P[i+2])<0) leftTurn++;
+             else rightTurn++;
+         }
+         if(leftTurn==0||rightTurn==0) removeDone=true;
+        // println(leftTurn+"  "+rightTurn);
+         
+         //remove those minority
+         for(int i=0;i<C0.n-2;i++){
+             if(leftTurn>rightTurn){
+                 if(crossProduct2D(C0.P[i],C0.P[i+1],C0.P[i+2])>0) removePoint(0,i+2);
+             }
+             else{
+                 if(crossProduct2D(C0.P[i],C0.P[i+1],C0.P[i+2])<0) removePoint(0,i+2);
+             }
            
-          
-          
-        }
+         }
   }
-  */
+ }
+ 
+  //C1
+ if(lastShapeKey==2){
+  if (C1.n>=3){
+        boolean removeDone=false;
+        
+        
+       //determine turning majority
+         int leftTurn=0;
+         int rightTurn=0;
+         for(int i=0;i<C1.n-2;i++){
+             if(crossProduct2D(C1.P[i],C1.P[i+1],C1.P[i+2])<0) leftTurn++;
+             else rightTurn++;
+         }
+         if(leftTurn==0||rightTurn==0) removeDone=true;
+        // println(leftTurn+"  "+rightTurn);
+         
+         //remove those minority
+         for(int i=0;i<C1.n-2;i++){
+             if(leftTurn>rightTurn){
+                 if(crossProduct2D(C1.P[i],C1.P[i+1],C1.P[i+2])>0) removePoint(1,i+2);
+             }
+             else{
+                 if(crossProduct2D(C1.P[i],C1.P[i+1],C1.P[i+2])<0) removePoint(1,i+2);
+             }
+           
+         }
+  }
+ }
+ 
+  //C2
+ if(lastShapeKey==3){
+  if (C2.n>=3){
+        boolean removeDone=false;
+        
+        
+       //determine turning majority
+         int leftTurn=0;
+         int rightTurn=0;
+         for(int i=0;i<C2.n-2;i++){
+             if(crossProduct2D(C2.P[i],C2.P[i+1],C2.P[i+2])<0) leftTurn++;
+             else rightTurn++;
+         }
+         if(leftTurn==0||rightTurn==0) removeDone=true;
+        // println(leftTurn+"  "+rightTurn);
+         
+         //remove those minority
+         for(int i=0;i<C2.n-2;i++){
+             if(leftTurn>rightTurn){
+                 if(crossProduct2D(C2.P[i],C2.P[i+1],C2.P[i+2])>0) removePoint(2,i+2);
+             }
+             else{
+                 if(crossProduct2D(C2.P[i],C2.P[i+1],C2.P[i+2])<0) removePoint(2,i+2);
+             }
+           
+         }
+  }
+ }
+ 
+  //C3
+ if(lastShapeKey==4){
+  if (C3.n>=3){
+        boolean removeDone=false;
+        
+        
+       //determine turning majority
+         int leftTurn=0;
+         int rightTurn=0;
+         for(int i=0;i<C3.n-2;i++){
+             if(crossProduct2D(C3.P[i],C3.P[i+1],C3.P[i+2])<0) leftTurn++;
+             else rightTurn++;
+         }
+         if(leftTurn==0||rightTurn==0) removeDone=true;
+        // println(leftTurn+"  "+rightTurn);
+         
+         //remove those minority
+         for(int i=0;i<C3.n-2;i++){
+             if(leftTurn>rightTurn){
+                 if(crossProduct2D(C3.P[i],C3.P[i+1],C3.P[i+2])>0) removePoint(3,i+2);
+             }
+             else{
+                 if(crossProduct2D(C3.P[i],C3.P[i+1],C3.P[i+2])<0) removePoint(3,i+2);
+             }
+           
+         }
+  }
+ }
+  
 }
+
+void removePoint(int CurveNo, int ptIndex){
+  if(CurveNo==0){
+     C0.delete(ptIndex);
+  }
+  if(CurveNo==1){
+     C1.delete(ptIndex);
+  }
+  if(CurveNo==2){
+     C2.delete(ptIndex);
+  }
+  if(CurveNo==3){
+     C3.delete(ptIndex);
+  }
+  
+  
+}
+
+float crossProduct2D(pt A, pt B, pt C){
+  return  (B.x-A.x)*(-(C.y-B.y))+(B.y-A.y)*(C.x-B.x);
+}
+
 void buildSurface(){
   //C0
   if(lastShapeKey==1){

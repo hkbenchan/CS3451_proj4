@@ -36,6 +36,7 @@ class Curve {
   void movePointTo(pt Q) {P[p].set(Q);}
   Curve append(pt Q)  {if(n+1 < P.length) { p=n; P[n++].set(Q); } return this; }; // add point at end of list
   void delete() { for (int i=p; i<n-1; i++) P[i].set(P[next(i)]); n--; p=prev(p);}
+  void delete(int de) { for (int i=de; i<n-1; i++) P[i].set(P[next(i)]); n--;}
   void addPt(pt M){
     P[n].set(M);
     n++;
