@@ -268,6 +268,7 @@ void draw() {
       //rotateY(acos(d(J,Dir))); 
       //rotateZ(acos(d(K,Dir)));
       S0.showFront();
+      S0.showTriNormal_VertexNormals();
       if (keyPressed && key=='U') S0.showLabels();
       popMatrix();
     }
@@ -282,6 +283,7 @@ void draw() {
       //rotateY(acos(d(J,Dir))); 
       //rotateZ(acos(d(K,Dir)));
       S1.showFront();
+      S1.showTriNormal_VertexNormals();
       if (keyPressed && key=='U') S1.showLabels();
       popMatrix();
     }
@@ -293,6 +295,7 @@ void draw() {
 //      rotateY(acos(d(J, Dir))); 
 //      rotateZ(acos(d(K, Dir)));
       S2.showFront();
+      S2.showTriNormal_VertexNormals();
       if (keyPressed && key=='U') S2.showLabels();
       popMatrix();
     }
@@ -304,6 +307,7 @@ void draw() {
 //      rotateY(acos(d(J, Dir))); 
 //      rotateZ(acos(d(K, Dir)));
       S3.showFront();
+       S3.showTriNormal_VertexNormals();
       if (keyPressed && key=='U') S3.showLabels();
       popMatrix();
     }

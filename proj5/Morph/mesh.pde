@@ -603,7 +603,14 @@ void purge(int k) {for(int i=0; i<nt; i++) visible[i]=Mt[i]==k;} // hides triang
   void normalizeTriNormals() {for (int i=0; i<nt; i++) Nt[i].normalize(); };
   void showNormals() {if(flatShading) showTriNormals(); else showVertexNormals(); }
   vec normalTo(int m) {vec N=V(); for (int i=0; i<nt; i++) if (tm[i]==m) N.add(triNormal(i)); return U(N); }
-
+ void showTriNormal_VertexNormals(){
+   
+      computeTriNormals();
+      computeVertexNormals();
+      stroke(black);
+      showNormals();
+      println("infun"+ "  "+nv);
+ }
 //  ==========================================================  VOLUME ===========================================
   float volume() {float v=0; for (int i=0; i<nt; i++) v+=triVol(i); vol=v/6; return vol; }
   float volume(int m) {float v=0; for (int i=0; i<nt; i++) if (tm[i]==m) v+=triVol(i); return v/6; }
